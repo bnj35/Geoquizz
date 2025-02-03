@@ -41,6 +41,10 @@ geoquizzdb.env
 rabbitmq_dir/
 .idea
 
+data/
+vendor/
+
 backend/data/database
 /frontend/.vite
+
 

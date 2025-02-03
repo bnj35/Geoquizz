@@ -101,7 +101,7 @@ services:
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   api.mail.geoquizz:
-    #  image: 'canals/php:8.3-cli'
+    image: 'canals/php:8.3-cli'
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
@@ -116,7 +116,7 @@ services:
     depends_on:
       - database
       - rabbitmq
-#    command: php src/infrastructure/http/ServiceMailHTTP.php
+    command: php src/infrastructure/http/MailHttp.php
 
 
   adminer:
@@ -153,7 +153,7 @@ services:
       - ./backend/rabbitmq_dir:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=@dm1#!
+      - RABBITMQ_DEFAULT_PASS=admin
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 8s
