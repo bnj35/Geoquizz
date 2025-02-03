@@ -178,3 +178,20 @@ services:
     command: sh -c "npm install && npm run dev -- --host"
     networks:
       - geoquizz.net
+
+  geoquizz.db:
+    image: 'postgres:latest'
+    env_file: ./geoquizzdb.env
+    ports:
+      - '5432:5432'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./backend/sql:/var/sql
+
+  adminer2:
+    image: adminer
+    ports:
+      - '8082:8080'
+    networks:
+      - geoquizz.net
