@@ -1,19 +1,28 @@
 <?php
 declare(strict_types=1);
 
+use geoquizz\src\Action\CreatePartieAction;
+use geoquizz\src\Action\GetPartiesAction;
+use geoquizz\src\Action\GetPartieByIdAction;
+use geoquizz\src\Action\GetPartiesByUserAction;
 
-use geoquizz\application\actions\RefreshAction;
-use geoquizz\application\actions\SigninAction;
-use geoquizz\application\actions\SignupAction;
-use geoquizz\application\actions\ValidateAction;
+
 
 return function(\Slim\App $app):\Slim\App {
 
+    $app->post('/parties', CreatePartieAction::class);
+    ->setName('createPartie');
 
-    $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
-    $app->post('/signin[/]', SigninAction::class)->setName('signin');
-    $app->post('/signup[/]', SignupAction::class)->setName('signup');
-    $app->post('/validate[/]', ValidateAction::class)->setName('validate');
+    $app->get('/parties', GetPartiesAction::class);
+    $app->setName('getParties');
+
+    $app->get('/parties/{id}', GetPartieByIdAction::class);
+    $app->setName('getPartieById');
+    
+    $app->get('users/{id}/parties', GetPartiesByUserAction::class);
+    $app->setName('getPartiesByUser');
+
+
 
     return $app;
 };
