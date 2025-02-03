@@ -1,10 +1,12 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+
 </script>
 
 <template>
-  <RouterView />
+  <div class="m-auto w-[95%]">
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
