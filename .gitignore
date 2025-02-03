@@ -12,7 +12,6 @@ vendor/
 
 # Build directories
 dist/
-build/
 coverage/
 
 # IDE files
