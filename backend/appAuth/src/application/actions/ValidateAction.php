@@ -2,6 +2,11 @@
 
 namespace geoquizz\application\actions;
 
+use geoquizz\application\provider\auth\AuthProviderBeforeValidException;
+use geoquizz\application\provider\auth\AuthProviderInterface;
+use geoquizz\application\provider\auth\AuthProviderSignatureInvalidException;
+use geoquizz\application\provider\auth\AuthProviderTokenExpiredException;
+use geoquizz\application\renderer\JsonRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpUnauthorizedException;
@@ -31,8 +36,6 @@ class ValidateAction extends AbstractAction
             throw new HttpUnauthorizedException($rq, 'Token not yet valid');
         }catch (AuthProviderSignatureInvalidException $e) {
             throw new HttpUnauthorizedException($rq, 'Token signature invalid');
-        }catch (AuthProviderTokenExpiredException $e) {
-            throw new HttpUnauthorizedException($rq, 'Token expired');
         }
 
     }
