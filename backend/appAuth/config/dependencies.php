@@ -1,6 +1,8 @@
 <?php
 
 
+use geoquizz\application\actions\DisplayAllUsersAction;
+use geoquizz\application\actions\DisplayUserByIdAction;
 use geoquizz\application\actions\RefreshAction;
 use geoquizz\application\actions\SigninAction;
 use geoquizz\application\actions\SignupAction;
@@ -76,6 +78,16 @@ return [
     SignupAction::class => function (ContainerInterface $c) {
         return new SignupAction(
             $c->get(AuthProviderInterface::class)
+        );
+    },
+    DisplayAllUsersAction::class => function (ContainerInterface $c) {
+        return new DisplayAllUsersAction(
+            $c->get(AuthentificationServiceInterface::class)
+        );
+    },
+    DisplayUserByIdAction::class => function (ContainerInterface $c) {
+        return new DisplayUserByIdAction(
+            $c->get(AuthentificationServiceInterface::class)
         );
     },
 ];
