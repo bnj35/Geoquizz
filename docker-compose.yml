@@ -11,6 +11,8 @@ services:
     # platform: linux/amd64
     volumes:
       - ./backend/data/database:/var/lib/postgresql/data
+    ports:
+      - "8081:5432"
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -121,8 +123,6 @@ services:
     image: adminer
     ports:
       - '8080:8080'
-    networks:
-      - geoquizz.net
 
   # service gateway
   gateway:
@@ -176,5 +176,22 @@ services:
     ports:
       - '4545:5173'
     command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - geoquizz.net
+
+  geoquizz.db:
+    image: 'postgres:latest'
+    env_file: ./geoquizzdb.env
+    ports:
+      - '5432:5432'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./backend/sql:/var/sql
+
+  adminer2:
+    image: adminer
+    ports:
+      - '8082:8080'
     networks:
       - geoquizz.net
