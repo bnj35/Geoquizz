@@ -114,8 +114,9 @@ services:
     networks:
       - geoquizz.net
     depends_on:
-      - database
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+
     command: php src/infrastructure/http/MailHttp.php
 
 
