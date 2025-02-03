@@ -38,7 +38,13 @@ geoquizzdb.env
 #folders
 
 /frontend/node_modules/
-dist/
 rabbitmq_dir/
 .idea
+
 backend/data/database
+
+data/
+vendor/
+
+/frontend/.vite
+

@@ -11,6 +11,8 @@ services:
     # platform: linux/amd64
     volumes:
       - ./backend/data/database:/var/lib/postgresql/data
+    ports:
+      - "8081:5432"
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -99,7 +101,7 @@ services:
     command: php -S 0.0.0.0:80 -t /var/php/public
 
   api.mail.geoquizz:
-    #  image: 'canals/php:8.3-cli'
+    image: 'canals/php:8.3-cli'
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
@@ -112,17 +114,16 @@ services:
     networks:
       - geoquizz.net
     depends_on:
-      - database
-      - rabbitmq
-#    command: php src/infrastructure/http/ServiceMailHTTP.php
+      rabbitmq:
+        condition: service_healthy
+
+    command: php src/infrastructure/http/MailHttp.php
 
 
   adminer:
     image: adminer
     ports:
       - '8080:8080'
-    networks:
-      - geoquizz.net
 
   # service gateway
   gateway:
@@ -153,7 +154,7 @@ services:
       - ./backend/rabbitmq_dir:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=@dm1#!
+      - RABBITMQ_DEFAULT_PASS=admin
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 8s
@@ -176,5 +177,22 @@ services:
     ports:
       - '4545:5173'
     command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - geoquizz.net
+
+  geoquizz.db:
+    image: 'postgres:latest'
+    env_file: ./geoquizzdb.env
+    ports:
+      - '5432:5432'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./backend/sql:/var/sql
+
+  adminer2:
+    image: adminer
+    ports:
+      - '8082:8080'
     networks:
       - geoquizz.net
