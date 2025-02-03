@@ -41,3 +41,6 @@ geoquizzdb.env
 dist/
 rabbitmq_dir/
 .idea
+
+data/
+vendor/
