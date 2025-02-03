@@ -11,6 +11,8 @@ services:
     # platform: linux/amd64
     volumes:
       - ./backend/data/database:/var/lib/postgresql/data
+    ports:
+      - "8081:5432"
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -22,8 +24,6 @@ services:
       retries: 5
       start_interval: 5s
       start_period: 30s
-    networks:
-      - geoquizz.net
 
   cache:
     image: redis:6
@@ -123,8 +123,6 @@ services:
     image: adminer
     ports:
       - '8080:8080'
-    networks:
-      - geoquizz.net
 
   # service gateway
   gateway:
