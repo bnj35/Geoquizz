@@ -1,0 +1,180 @@
+version: '3.8'
+
+networks:
+  geoquizz.net:
+    driver: bridge
+
+services:
+  database:
+    image: postgis/postgis:13-master
+    # Required when running on platform other than amd64, like Apple M1/M2:
+    # platform: linux/amd64
+    volumes:
+      - ./backend/data/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: "directus"
+      POSTGRES_DB: "directus"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "--host=localhost", "--username=directus" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_interval: 5s
+      start_period: 30s
+
+  cache:
+    image: redis:6
+    healthcheck:
+      test: [ "CMD-SHELL", "[ $$(redis-cli ping) = 'PONG' ]" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_interval: 5s
+      start_period: 30s
+
+  directus:
+    image: directus/directus:11.3.5
+    ports:
+      - "8055:8055"
+    volumes:
+      - ./backend/directus/uploads:/directus/uploads
+      - ./backend/directus/extensions:/directus/extensions
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    environment:
+      SECRET: "replace-with-secure-random-value"
+
+      DB_CLIENT: "pg"
+      DB_HOST: "database"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+
+      CACHE_ENABLED: "true"
+      CACHE_AUTO_PURGE: "true"
+      CACHE_STORE: "redis"
+      REDIS: "redis://cache:6379"
+
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+
+  api.services.geoquizz:
+    #  image: 'canals/php:8.3-cli'
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6082:80'
+    volumes:
+      - ./backend/appGeoquizz:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - database
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+
+  api.auth.geoquizz:
+    #  image: 'canals/php:8.3-cli'
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6085:80'
+    volumes:
+      - ./backend/appAuth:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - database
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  api.mail.geoquizz:
+    #  image: 'canals/php:8.3-cli'
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6086:80'
+    volumes:
+      - ./backend/appMail:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - database
+      - rabbitmq
+#    command: php src/infrastructure/http/ServiceMailHTTP.php
+
+
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    networks:
+      - geoquizz.net
+
+  # service gateway
+  gateway:
+    image: 'canals/php:8.3-cli'
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6081:80'
+    volumes:
+      - ./backend/gateway:/var/gateway
+    working_dir: /var/gateway
+    networks:
+      - geoquizz.net
+    depends_on:
+      - database
+    command: php -S 0.0.0.0:80 -t /var/gateway/public
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./backend/rabbitmq_dir:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=@dm1#!
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 8s
+      timeout: 30s
+      retries: 3
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '1080:1080'
+    networks:
+      - geoquizz.net
+
+  frontend:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - '4545:5173'
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - geoquizz.net
