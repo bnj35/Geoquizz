@@ -1,0 +1,42 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Build directories
+dist/
+build/
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+docker-compose.override.yml
+
+# Local environment variables
+geoquizz.env
+geoquizzdb.env
+
+#folders
+
+/frontend/node_modules/
+dist/
+rabbitmq_dir/

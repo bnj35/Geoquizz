@@ -1,0 +1,183 @@
+networks:
+  geoquizz.net:
+    driver: bridge
+
+services:
+
+  # service api.praticien.geoquizz : micro-service pour la gestion des praticiens
+  api.geoquizz.geoquizz:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6081:80'
+    volumes:
+      - ./appGeoquizz:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - geoquizz.db
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  # service api.directus.geoquizz : micro-service pour la gestion des directus
+  cache:
+    image: redis:6
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(redis-cli ping) = 'PONG' ]"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_interval: 5s
+      start_period: 30s
+
+  api.directus.geoquizz:
+    image: directus/directus:11.4.0
+    ports:
+      - 8055:8055
+    volumes:
+      - ./appDirectus/uploads:/directus/uploads
+      - ./appDirectus/extensions:/directus/extensions
+    networks:
+      - geoquizz.net
+    depends_on:
+      geoquizz.db:
+        condition: service_started
+      cache:
+        condition: service_healthy
+    environment:
+      SECRET: "replace-with-secure-random-value"
+
+      DB_CLIENT: "pg"
+      DB_HOST: "geoquizz.db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+
+      CACHE_ENABLED: "true"
+      CACHE_AUTO_PURGE: "true"
+      CACHE_STORE: "redis"
+      REDIS: "redis://cache:6379"
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+
+
+  # service api.auth.geoquizz : micro-service pour la gestion des utilisateurs
+  api.auth.geoquizz:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6083:80'
+    volumes:
+      - ./appAuth:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - geoquizz.db
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  # service geoquizz.db : base de données postgresql
+  geoquizz.db:
+    image: 'postgres:latest'
+    env_file: ./geoquizzdb.env
+    ports:
+      - '5432:5432'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./app/sql:/var/sql
+
+  # service administration des bases sql
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    networks:
+      - geoquizz.net
+
+  # service guzzle : separation des services
+  gateway.geoquizz:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6086:80'
+    volumes:
+      - ./gateway:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      - geoquizz.db
+      - api.geoquizz.geoquizz
+      - api.directus.geoquizz
+      - api.auth.geoquizz
+      - rabbitmq
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
+  # service rabbitmq pour la gestion des messages
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./rabbitmq_dir:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 8s
+      timeout: 30s
+      retries: 3
+
+  # service mailcatcher : pour tester l'envoi de mails
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '1080:1080'
+      - '1025:1025'
+    networks:
+      - geoquizz.net
+
+  # service api.mail.geoquizz : micro-service pour la gestion des mails
+  api.mail.geoquizz:
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./geoquizz.env
+    ports:
+      - '6084:80'
+    volumes:
+      - ./appMail:/var/php
+    working_dir: /var/php
+    networks:
+      - geoquizz.net
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: php /var/php/src/infrastructure/Http/MailHttp.php
+
+
+    # service front.geoquizz : front-end de l'application
+  app.front:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - '3000:5173'
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run format && npm run dev"
