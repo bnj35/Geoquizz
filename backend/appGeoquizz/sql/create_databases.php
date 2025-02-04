@@ -56,6 +56,7 @@ try {
     $sqlTables = "
         CREATE TABLE IF NOT EXISTS Parties (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            nom VARCHAR(255) NOT NULL,
             token VARCHAR(255) NOT NULL UNIQUE,
             nb_photos INT NOT NULL,
             score INT NOT NULL DEFAULT 0,
