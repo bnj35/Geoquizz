@@ -11,6 +11,7 @@ use geoquizz\core\dto\partie\PartieDTO;
 use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
 use geoquizz\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use geoquizz\core\repositoryInterfaces\RepositoryInternalServerError;
+use geoquizz\core\services\partie\ServicePartieInterface;
 
 class ServicePartie implements ServicePartieInterface
 {
@@ -18,7 +19,48 @@ class ServicePartie implements ServicePartieInterface
 
     public function __construct(PartieRepositoryInterface $partieRepository)
     {
-        $this->partieRepos$partieRepository = $partieRepository;
+        $this->partieRepository = $partieRepository;
     }
 
+    public function createPartie(InputPartieDTO $dto): PartieDTO
+    {
+        $partie = new Partie($dto->getNom(), $dto->getToken(), $dto->getNbPhotos(), $dto->getScore(), $dto->getTheme());
+        $id = $this->partieRepository->save($partie);
+        $partie->setID($id);
+        return $partie->toDTO();
+    }
+
+    public function getAllParties(): array
+    {
+        try {
+            $parties = $this->partieRepository->getAllParties(); // Correct method call
+            $partiesDTO = [];
+            foreach ($parties as $partie) {
+                $partiesDTO[] = $partie->toDTO();
+            }
+            return $partiesDTO;
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
+
+    public function getPartieById(string $id): PartieDTO
+    {
+        try {
+            $partie = $this->partieRepository->getPartieById($id);
+            return new PartieDTO($partie);
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException('invalid Partie ID');
+        } catch(RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
+
+    public function getPartiesByUser(string $user): array
+    {
+        $parties = $this->partieRepository->getPartiesByEmail($user);
+        return array_map(function($partie) {
+            return $partie->toDTO();
+        }, $parties);
+    }
 }

@@ -1,28 +1,24 @@
 <?php
 declare(strict_types=1);
 
-use geoquizz\src\Action\CreatePartieAction;
-use geoquizz\src\Action\GetPartiesAction;
-use geoquizz\src\Action\GetPartieByIdAction;
-use geoquizz\src\Action\GetPartiesByUserAction;
+use geoquizz\application\actions\CreatePartieAction;
+use geoquizz\application\actions\GetPartiesAction;
+use geoquizz\application\actions\GetPartieByIdAction;
+use geoquizz\application\actions\GetPartiesByUserAction;
 
+return function(\Slim\App $app): \Slim\App {
 
+    $app->post('/parties', CreatePartieAction::class)->setName('createPartie');
 
-return function(\Slim\App $app):\Slim\App {
+    $app->get('/parties', GetPartiesAction::class)->setName('getParties');
 
-    $app->post('/parties', CreatePartieAction::class);
-    ->setName('createPartie');
-
-    $app->get('/parties', GetPartiesAction::class);
-    $app->setName('getParties');
-
-    $app->get('/parties/{id}', GetPartieByIdAction::class);
-    $app->setName('getPartieById');
+    $app->get('/parties/{id}', GetPartieByIdAction::class)->setName('getPartieById');
     
-    $app->get('users/{id}/parties', GetPartiesByUserAction::class);
-    $app->setName('getPartiesByUser');
-
-
+    $app->get('/users/{id}/parties', GetPartiesByUserAction::class)->setName('getPartiesByUser');
+    $app->get('/', function ($request, $response, $args) {
+        $response->getBody()->write("Hello world!");
+        return $response;
+    });
 
     return $app;
 };

@@ -1,6 +1,6 @@
 <?php
 
-namespace geoquizz\core\domain\entities\parties;
+namespace geoquizz\core\domain\entities\partie;
 
 //entities
 use geoquizz\core\domain\entities\Entity;
@@ -9,7 +9,6 @@ use geoquizz\core\dto\partie\PartieDTO;
 
 class Partie extends Entity
 {
-    protected string $email;
     protected string $nom;
     protected string $token;
     protected int $nb_photos;
@@ -18,19 +17,13 @@ class Partie extends Entity
     
 
 
-    public function __construct(string $email, string $nom, string $token, int $nb_photos, int $score, string $theme)
+    public function __construct(string $nom, string $token, int $nb_photos, int $score, string $theme)
     {
-        $this->email = $email;
         $this->nom = $nom;
         $this->token = $token;
         $this->nb_photos = $nb_photos;
         $this->score = $score;
         $this->theme = $theme;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
     }
 
     public function getNom(): string
