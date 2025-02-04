@@ -11,6 +11,7 @@ use geoquizz\application\actions\CreatePartieAction;
 use geoquizz\application\actions\GetPartiesAction;
 use geoquizz\application\actions\GetPartieByIdAction;
 use geoquizz\application\actions\GetPartiesByUserAction;
+use geoquizz\application\actions\UpdatePartieAction;
 
 return [
 
@@ -45,7 +46,7 @@ return [
     // Providers
 
     // Services
-    PartieServiceInterface::class => function (ContainerInterface $c) {
+    ServicePartieInterface::class => function (ContainerInterface $c) {
         return new ServicePartie(
             $c->get(PartieRepositoryInterface::class)
         );
@@ -55,26 +56,32 @@ return [
 
     CreatePartieAction::class => function (ContainerInterface $c) {
         return new CreatePartieAction(
-            $c->get(PartieServiceInterface::class)
+            $c->get(ServicePartieInterface::class)
         );
     },
 
     GetPartiesAction::class => function (ContainerInterface $c) {
         return new GetPartiesAction(
-            $c->get(PartieServiceInterface::class)
+            $c->get(ServicePartieInterface::class)
         );
     },
 
     GetPartieByIdAction::class => function (ContainerInterface $c) {
         return new GetPartieByIdAction(
-            $c->get(PartieServiceInterface::class)
+            $c->get(ServicePartieInterface::class)
         );
     },
 
     GetPartiesByUserAction::class => function (ContainerInterface $c) {
         return new GetPartiesByUserAction(
-            $c->get(PartieServiceInterface::class)
+            $c->get(ServicePartieInterface::class)
         );
     },
+
+    UpdateScoreAction::class => function (ContainerInterface $c) {
+        return new UpdateScoreAction(
+            $c->get(ServicePartieInterface::class)
+        );
+    }
     
 ];

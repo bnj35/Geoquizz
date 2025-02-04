@@ -12,4 +12,5 @@ interface ServicePartieInterface
     public function getAllParties(): array;
     public function getPartieById(string $id): PartieDTO;
     public function getPartieByUserId(string $userId): array;
+    public function updateScore(string $id, int $score): void;
 }
