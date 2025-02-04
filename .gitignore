@@ -48,3 +48,6 @@ vendor/
 
 /frontend/.vite
 
+/backend/directus/extensions/
+/backend/directus/uploads/
+/backend/appGeoquizz/images/
