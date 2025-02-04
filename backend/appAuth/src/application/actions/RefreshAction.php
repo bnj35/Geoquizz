@@ -2,6 +2,8 @@
 
 namespace geoquizz\application\actions;
 
+use geoquizz\application\renderer\JsonRenderer;
+use geoquizz\core\services\auth\AuthentificationServiceInternalServerErrorException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpUnauthorizedException;

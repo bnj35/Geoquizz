@@ -55,4 +55,33 @@ class AuthentificationService implements AuthentificationServiceInterface
         }
     }
 
+    public function getUsers(): array
+    {
+        try{
+            $users = $this->authRepository->getUsers();
+            $usersDTO = [];
+            foreach ($users as $user) {
+                $usersDTO[] = new AuthDTO($user->getID(), $user->getEmail(), $user->getRole());
+            }
+            return $usersDTO;
+        }catch (RepositoryInternalServerError $e){
+            throw new AuthentificationServiceInternalServerErrorException("Error while fetching users");
+        }
+    }
+
+    public function getUserById(string $id): AuthDTO
+    {
+        try{
+            $user = $this->authRepository->getUserById($id);
+            if ($user === null) {
+                throw new AuthentificationServiceBadDataException("User not found");
+            }
+            return new AuthDTO($user->getID(), $user->getEmail(), $user->getRole());
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new AuthentificationServiceBadDataException("User not found");
+        }catch (RepositoryInternalServerError $e){
+            throw new AuthentificationServiceInternalServerErrorException("Error while fetching user");
+        }
+    }
+
 }
