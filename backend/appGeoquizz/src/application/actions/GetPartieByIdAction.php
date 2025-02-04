@@ -1,5 +1,5 @@
 <?php
-namespace geoquizz\src\application\actions;
+namespace geoquizz\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -8,7 +8,7 @@ use Slim\Exception\HttpInternalServerErrorException;
 //routing
 use Slim\Routing\RouteContext;
 //renderer
-use geoquizz\src\renderer\JsonRenderer;
+use geoquizz\application\renderer\JsonRenderer;
 //services
 use geoquizz\core\services\partie\ServicePartieInterface;
 use geoquizz\application\actions\AbstractAction;
@@ -28,7 +28,7 @@ class GetPartieByIdAction extends AbstractAction {
             $partie = $this->partieService->getPartieById($partieId);
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
-            $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->getId()]);
+            $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
             $result = [
                 "type" => "resource",
                 "locale" => "fr-FR",
