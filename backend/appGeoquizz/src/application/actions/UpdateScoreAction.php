@@ -27,6 +27,11 @@ class UpdateScoreAction extends AbstractAction
         try {
             $id = $args['id'];
             $data = $rq->getParsedBody();
+
+            if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
+                throw new HttpBadRequestException($rq, "Bad data format score");
+            }
+            
             $score = $data['score'];
             $this->partieService->updateScore($id, $score);
             $response = [
