@@ -23,28 +23,28 @@ class PDOStatsRepository implements StatsRepositoryInterface
             if($stats->getID() === null){
                 $id = Uuid::uuid4()->toString();
                 $stats->setID($id);
-                $sql = "INSERT INTO stats (id, user_id, score_total, score_moyen, nb_parties, meilleur_score, pire_coups) VALUES (:id, :user_id, :score_total, :score_moyen, :nb_parties, :meilleur_score, :pire_coups)";
+                $sql = "INSERT INTO stats (id, user_id, score_tot, score_moyen, nb_partie, meilleur_coup, pire_coup) VALUES (:id, :user_id, :score_tot, :score_moyen, :nb_partie, :meilleur_coup, :pire_coup)";
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([
                     'id' => $stats->getID(),
                     'user_id' => $stats->getUserID(),
-                    'score_total' => $stats->getScoreTotal(),
+                    'score_tot' => $stats->getScoreTotal(),
                     'score_moyen' => $stats->getScoreMoyen(),
-                    'nb_parties' => $stats->getNbParties(),
-                    'meilleur_score' => $stats->getMeilleurScore(),
-                    'pire_coups' => $stats->getPireCoups()
+                    'nb_partie' => $stats->getNbParties(),
+                    'meilleur_coup' => $stats->getMeilleurScore(),
+                    'pire_coup' => $stats->getPireCoups()
                 ]);
             } else {
-                $sql = "UPDATE stats SET user_id = :user_id, score_total = :score_total, score_moyen = :score_moyen, nb_parties = :nb_parties, meilleur_score = :meilleur_score, pire_coups = :pire_coups WHERE id = :id";
+                $sql = "UPDATE stats SET user_id = :user_id, score_tot = :score_tot, score_moyen = :score_moyen, nb_partie = :nb_partie, meilleur_coup = :meilleur_coup, pire_coup = :pire_coup WHERE id = :id";
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([
                     'id' => $stats->getID(),
                     'user_id' => $stats->getUserID(),
-                    'score_total' => $stats->getScoreTotal(),
+                    'score_tot' => $stats->getScoreTotal(),
                     'score_moyen' => $stats->getScoreMoyen(),
-                    'nb_parties' => $stats->getNbParties(),
-                    'meilleur_score' => $stats->getMeilleurScore(),
-                    'pire_coups' => $stats->getPireCoups()
+                    'nb_partie' => $stats->getNbParties(),
+                    'meilleur_coup' => $stats->getMeilleurScore(),
+                    'pire_coup' => $stats->getPireCoups()
                 ]);
             }
             return $stats->getID();
@@ -74,7 +74,7 @@ class PDOStatsRepository implements StatsRepositoryInterface
             if ($stats === false) {
                 throw new RepositoryEntityNotFoundException("Stats not found");
             }
-            $newStats = new Stats($stats['user_id'], $stats['score_total'], $stats['score_moyen'], $stats['nb_parties'], $stats['meilleur_score'], $stats['pire_coups']);
+            $newStats = new Stats($stats['user_id'], $stats['score_tot'], $stats['score_moyen'], $stats['nb_partie'], $stats['meilleur_coup'], $stats['pire_coup']);
             $newStats->setID($stats['id']);
             return $newStats;
         }catch (\PDOException $e){
@@ -90,7 +90,7 @@ class PDOStatsRepository implements StatsRepositoryInterface
             $stats = $stmt->fetchAll();
             $result = [];
             foreach ($stats as $stat){
-                $newStats = new Stats($stat['user_id'], $stat['score_total'], $stat['score_moyen'], $stat['nb_parties'], $stat['meilleur_score'], $stat['pire_coups']);
+                $newStats = new Stats($stat['user_id'], $stat['score_tot'], $stat['score_moyen'], $stat['nb_partie'], $stat['meilleur_coup'], $stat['pire_coup']);
                 $newStats->setID($stat['id']);
                 $result[] = $newStats;
             }
@@ -110,7 +110,7 @@ class PDOStatsRepository implements StatsRepositoryInterface
             if ($stats === false) {
                 throw new RepositoryEntityNotFoundException("Stats not found");
             }
-            $newStats = new Stats($stats['user_id'], $stats['score_total'], $stats['score_moyen'], $stats['nb_parties'], $stats['meilleur_score'], $stats['pire_coups']);
+            $newStats = new Stats($stats['user_id'], $stats['score_tot'], $stats['score_moyen'], $stats['nb_partie'], $stats['meilleur_coup'], $stats['pire_coup']);
             $newStats->setID($stats['id']);
             return $newStats;
         }catch (\PDOException $e){
@@ -121,13 +121,13 @@ class PDOStatsRepository implements StatsRepositoryInterface
     public function search(string $search): array
     {
         try{
-            $sql = "SELECT * FROM stats WHERE score_total LIKE :search OR score_moyen LIKE :search OR nb_parties LIKE :search OR meilleur_score LIKE :search OR pire_coups LIKE :search";
+            $sql = "SELECT * FROM stats WHERE score_tot LIKE :search OR score_moyen LIKE :search OR nb_partie LIKE :search OR meilleur_coup LIKE :search OR pire_coup LIKE :search";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute(['search' => $search]);
             $stats = $stmt->fetchAll();
             $result = [];
             foreach ($stats as $stat){
-                $newStats = new Stats($stat['user_id'], $stat['score_total'], $stat['score_moyen'], $stat['nb_parties'], $stat['meilleur_score'], $stat['pire_coups']);
+                $newStats = new Stats($stat['user_id'], $stat['score_tot'], $stat['score_moyen'], $stat['nb_partie'], $stat['meilleur_coup'], $stat['pire_coup']);
                 $newStats->setID($stat['id']);
                 $result[] = $newStats;
             }
