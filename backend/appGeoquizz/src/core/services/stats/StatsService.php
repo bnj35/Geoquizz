@@ -28,7 +28,7 @@ class StatsService implements StatsServiceInterface
     public function createStats(InputStatsDTO $inputStatsDTO): DisplayDetailsStatsDTO
     {
         try{
-            $stats = new Stats($inputStatsDTO->id, $inputStatsDTO->score_total, $inputStatsDTO->score_moyen, $inputStatsDTO->nb_partie, $inputStatsDTO->meilleur_score, $inputStatsDTO->pire_coups);
+            $stats = new Stats($inputStatsDTO->id_user, $inputStatsDTO->score_total, $inputStatsDTO->score_moyen, $inputStatsDTO->nb_partie, $inputStatsDTO->meilleur_score, $inputStatsDTO->pire_coups);
             $id = $this->statsRepositoryInterface->save($stats);
             $stats->setID($id);
             return new DisplayDetailsStatsDTO($stats);

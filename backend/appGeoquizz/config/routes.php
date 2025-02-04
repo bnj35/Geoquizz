@@ -2,18 +2,19 @@
 declare(strict_types=1);
 
 
-use geoquizz\application\actions\RefreshAction;
-use geoquizz\application\actions\SigninAction;
-use geoquizz\application\actions\SignupAction;
-use geoquizz\application\actions\ValidateAction;
+use geoquizz\application\actions\CreateStatAction;
+use geoquizz\application\actions\DisplayStatAction;
+use geoquizz\application\actions\DisplayStatsAction;
+use geoquizz\application\actions\UpdateStatAction;
 
 return function(\Slim\App $app):\Slim\App {
 
 
-    $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
-    $app->post('/signin[/]', SigninAction::class)->setName('signin');
-    $app->post('/signup[/]', SignupAction::class)->setName('signup');
-    $app->post('/validate[/]', ValidateAction::class)->setName('validate');
+    $app->get('/stats[/]', DisplayStatsAction::class);
+    $app->get('/stats/{id}[/]', DisplayStatAction::class);
+    $app->post('/stats[/]', CreateStatAction::class);
+    $app->put('/stats/{id}[/]', UpdateStatAction::class);
+
 
     return $app;
 };

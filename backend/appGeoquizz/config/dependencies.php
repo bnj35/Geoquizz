@@ -1,17 +1,13 @@
 <?php
 
-
-use geoquizz\application\actions\RefreshAction;
-use geoquizz\application\actions\SigninAction;
-use geoquizz\application\actions\SignupAction;
-use geoquizz\application\actions\ValidateAction;
-use geoquizz\application\provider\auth\AuthProviderInterface;
-use geoquizz\application\provider\auth\JWTAuthProvider;
-use geoquizz\application\provider\auth\JWTManager;
-use geoquizz\core\repositoryInterfaces\AuthRepositoryInterface;
-use geoquizz\core\services\auth\AuthentificationService;
-use geoquizz\core\services\auth\AuthentificationServiceInterface;
-use geoquizz\infrastructure\db\PDOAuthRepository;
+use geoquizz\application\actions\CreateStatAction;
+use geoquizz\application\actions\DisplayStatAction;
+use geoquizz\application\actions\DisplayStatsAction;
+use geoquizz\application\actions\UpdateStatAction;
+use geoquizz\core\repositoryInterfaces\StatsRepositoryInterface;
+use geoquizz\core\services\stats\StatsService;
+use geoquizz\core\services\stats\StatsServiceInterface;
+use geoquizz\infrastructure\db\PDOStatsRepository;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -29,53 +25,31 @@ return [
         return $logger;
     },
 
-    'pdo_auth' => function (ContainerInterface $c) {
-        $data = parse_ini_file($c->get('auth.ini'));
-        $pdo_auth = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
-        $pdo_auth->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        return $pdo_auth;
+    'pdo_partie' => function (ContainerInterface $c) {
+        $data = parse_ini_file($c->get('partie.ini'));
+        $pdo_partie = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
+        $pdo_partie->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_partie;
     },
 
-    // Repositories
-    AuthRepositoryInterface::class => function (ContainerInterface $c) {
-        return new PDOAuthRepository($c->get('pdo_auth'));
+    StatsRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOStatsRepository($c->get('pdo_partie'));
+    },
+    StatsServiceInterface::class => function (ContainerInterface $c) {
+        return new StatsService($c->get(StatsRepositoryInterface::class));
     },
 
-    // Providers
-    AuthProviderInterface::class => function (ContainerInterface $c) {
-        return new JWTAuthProvider(
-            $c->get(AuthentificationServiceInterface::class),
-            new JWTManager
-        );
+    CreateStatAction::class => function (ContainerInterface $c) {
+        return new CreateStatAction($c->get(StatsServiceInterface::class));
+    },
+    DisplayStatAction::class => function (ContainerInterface $c) {
+        return new DisplayStatAction($c->get(StatsServiceInterface::class));
+    },
+    DisplayStatsAction::class => function (ContainerInterface $c) {
+        return new DisplayStatsAction($c->get(StatsServiceInterface::class));
+    },
+    UpdateStatAction::class => function (ContainerInterface $c) {
+        return new UpdateStatAction($c->get(StatsServiceInterface::class));
     },
 
-    // Services
-    AuthentificationServiceInterface::class => function (ContainerInterface $c) {
-        return new AuthentificationService(
-            $c->get(AuthRepositoryInterface::class),
-        );
-    },
-
-    // Actions
-
-    SigninAction::class => function (ContainerInterface $c) {
-        return new SigninAction(
-            $c->get(AuthProviderInterface::class)
-        );
-    },
-    RefreshAction::class => function (ContainerInterface $c) {
-        return new RefreshAction(
-            $c->get(AuthentificationServiceInterface::class)
-        );
-    },
-    ValidateAction::class => function (ContainerInterface $c) {
-        return new ValidateAction(
-            $c->get(AuthProviderInterface::class)
-        );
-    },
-    SignupAction::class => function (ContainerInterface $c) {
-        return new SignupAction(
-            $c->get(AuthProviderInterface::class)
-        );
-    },
 ];
