@@ -3,14 +3,13 @@
 use geoquizz\application\actions\CreateStatAction;
 use geoquizz\application\actions\DisplayStatAction;
 use geoquizz\application\actions\DisplayStatsAction;
+use geoquizz\application\actions\UpdateScoreAction;
 use geoquizz\application\actions\UpdateStatAction;
 use geoquizz\core\repositoryInterfaces\StatsRepositoryInterface;
 use geoquizz\core\services\stats\StatsService;
 use geoquizz\core\services\stats\StatsServiceInterface;
 use geoquizz\infrastructure\db\PDOStatsRepository;
 use Psr\Container\ContainerInterface;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use geoquizz\infrastructure\db\PDOPartieRepository;
 use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
 use geoquizz\core\services\partie\ServicePartieInterface;
@@ -19,7 +18,6 @@ use geoquizz\application\actions\CreatePartieAction;
 use geoquizz\application\actions\GetPartiesAction;
 use geoquizz\application\actions\GetPartieByIdAction;
 use geoquizz\application\actions\GetPartiesByUserAction;
-use geoquizz\application\actions\UpdatePartieAction;
 
 return [
 
@@ -36,7 +34,7 @@ return [
         return $logger;
     },
 
-    'pdo_partie' => function (ContainerInterface $c){
+    'pdo_partie' => function (ContainerInterface $c) {
         $data = parse_ini_file($c->get('partie.ini'));
         $pdo_partie = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
         $pdo_partie->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -60,6 +58,7 @@ return [
         return new ServicePartie(
             $c->get(PartieRepositoryInterface::class)
         );
+    },
     CreateStatAction::class => function (ContainerInterface $c) {
         return new CreateStatAction($c->get(StatsServiceInterface::class));
     },
@@ -70,6 +69,7 @@ return [
         return new CreatePartieAction(
             $c->get(ServicePartieInterface::class)
         );
+    },
     DisplayStatAction::class => function (ContainerInterface $c) {
         return new DisplayStatAction($c->get(StatsServiceInterface::class));
     },
@@ -78,6 +78,7 @@ return [
         return new GetPartiesAction(
             $c->get(ServicePartieInterface::class)
         );
+    },
     DisplayStatsAction::class => function (ContainerInterface $c) {
         return new DisplayStatsAction($c->get(StatsServiceInterface::class));
     },
@@ -86,6 +87,7 @@ return [
         return new GetPartieByIdAction(
             $c->get(ServicePartieInterface::class)
         );
+    },
     UpdateStatAction::class => function (ContainerInterface $c) {
         return new UpdateStatAction($c->get(StatsServiceInterface::class));
     },
