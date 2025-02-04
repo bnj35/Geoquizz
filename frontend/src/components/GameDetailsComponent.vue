@@ -1,14 +1,22 @@
 <script setup>
+  import { ref } from 'vue';
+
+  import { useGameStore } from '@/stores/gameStore';
+
+  const gameStore = useGameStore();
 
 </script>
 
 <template>
-  <div class="absolute bg-black text-white m-auto left-1/2 -translate-x-1/2 gap-4 top-4 p-4 text-nowrap flex">
-    <p>Score :</p>
-    <p>Nombre de coups restants :</p>
-    <p>Serie jouée :</p>
+  <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white p-4 rounded-lg shadow-lg z-50">
+    <div class="flex gap-5 py-1 text-nowrap">
+      <p>Score : {{ gameStore.score }}</p>
+      <p>Temps restant : {{ gameStore.timeLeft }}</p>
+      <p>Serie jouée : {{ gameStore.seriePlayed }}</p>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 
