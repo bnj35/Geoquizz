@@ -34,10 +34,10 @@ try {
     $partie2Id = '86c0b5ac-cdcb-45c3-9b25-40cda261144a';
 
     $sqlPartie = "
-        INSERT INTO Parties (id, token, nb_photos, score, theme)
+        INSERT INTO Parties (id, nom, token, nb_photos, score, theme)
         VALUES
-            ('$partie1Id', '28Sw4vlZIB1X3FFAYGsM7pJUKUwhBkz9dfa37djHR4ljtiuddY1Z65GzKK9VLl9h', 5, 10, 'Nature'),
-            ('$partie2Id', 'wfmxd0rMAAj6JIZV4QhuvZPKY7FbaALJOmw12rkmKTpLT0Rsudo8eakOifZKOAFa', 10, 20, 'Architecture');
+            ('$partie1Id','partie1', '28Sw4vlZIB1X3FFAYGsM7pJUKUwhBkz9dfa37djHR4ljtiuddY1Z65GzKK9VLl9h', 5, 10, 'Nature'),
+            ('$partie2Id','partie2','wfmxd0rMAAj6JIZV4QhuvZPKY7FbaALJOmw12rkmKTpLT0Rsudo8eakOifZKOAFa', 10, 20, 'Architecture');
     ";
 
     $pdoGame->exec($sqlPartie);
