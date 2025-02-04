@@ -53,5 +53,33 @@ class Stats extends Entity
         return $this->pire_coups;
     }
 
+    public function setUserID(string $user_id): void
+    {
+        $this->user_id = $user_id;
+    }
 
+    public function setScoreTotal(int $score_total): void
+    {
+        $this->score_total = $score_total;
+    }
+
+    public function setScoreMoyen(int $score_moyen): void
+    {
+        $this->score_moyen = $score_moyen;
+    }
+
+    public function setNbParties(int $nb_parties): void
+    {
+        $this->nb_parties = $nb_parties;
+    }
+
+    public function setMeilleurScore(int $meilleur_score): void
+    {
+        $this->meilleur_score = $meilleur_score;
+    }
+
+    public function setPireCoups(int $pire_coups): void
+    {
+        $this->pire_coups = $pire_coups;
+    }
 }
