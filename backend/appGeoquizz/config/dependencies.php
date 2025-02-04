@@ -1,25 +1,23 @@
 <?php
 
-
-use geoquizz\application\actions\RefreshAction;
-use geoquizz\application\actions\SigninAction;
-use geoquizz\application\actions\SignupAction;
-use geoquizz\application\actions\ValidateAction;
-use geoquizz\application\provider\auth\AuthProviderInterface;
-use geoquizz\application\provider\auth\JWTAuthProvider;
-use geoquizz\application\provider\auth\JWTManager;
-use geoquizz\core\repositoryInterfaces\AuthRepositoryInterface;
-use geoquizz\core\services\auth\AuthentificationService;
-use geoquizz\core\services\auth\AuthentificationServiceInterface;
-use geoquizz\infrastructure\db\PDOAuthRepository;
 use Psr\Container\ContainerInterface;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use geoquizz\infrastructure\db\PDOPartieRepository;
+use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
+use geoquizz\core\services\partie\ServicePartieInterface;
+use geoquizz\core\services\partie\ServicePartie;
+use geoquizz\application\actions\CreatePartieAction;
+use geoquizz\application\actions\GetPartiesAction;
+use geoquizz\application\actions\GetPartieByIdAction;
+use geoquizz\application\actions\GetPartiesByUserAction;
 
 return [
 
     // Logger
     'log.prog.level' => \Monolog\Level::Debug,
-    'log.prog.name' => 'njp.program.log',
-    'log.prog.file' => __DIR__ . '/log/njp.program.error.log',
+    'log.prog.name' => 'geoquizz.program.log',
+    'log.prog.file' => __DIR__ . '/log/geoquizz.program.error.log',
     'prog.logger' => function (ContainerInterface $c) {
         $logger = new \Monolog\Logger($c->get('log.prog.name'));
         $logger->pushHandler(
@@ -29,53 +27,53 @@ return [
         return $logger;
     },
 
-    'pdo_auth' => function (ContainerInterface $c) {
-        $data = parse_ini_file($c->get('auth.ini'));
-        $pdo_auth = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
-        $pdo_auth->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        return $pdo_auth;
+    'pdo_partie' => function (ContainerInterface $c){
+        $data = parse_ini_file($c->get('partie.ini'));
+        $pdo_partie = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
+        $pdo_partie->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_partie;
     },
 
     // Repositories
-    AuthRepositoryInterface::class => function (ContainerInterface $c) {
-        return new PDOAuthRepository($c->get('pdo_auth'));
+
+    PartieRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOPartieRepository($c->get('pdo_partie'));
     },
+
 
     // Providers
-    AuthProviderInterface::class => function (ContainerInterface $c) {
-        return new JWTAuthProvider(
-            $c->get(AuthentificationServiceInterface::class),
-            new JWTManager
-        );
-    },
 
     // Services
-    AuthentificationServiceInterface::class => function (ContainerInterface $c) {
-        return new AuthentificationService(
-            $c->get(AuthRepositoryInterface::class),
+    PartieServiceInterface::class => function (ContainerInterface $c) {
+        return new ServicePartie(
+            $c->get(PartieRepositoryInterface::class)
         );
     },
 
     // Actions
 
-    SigninAction::class => function (ContainerInterface $c) {
-        return new SigninAction(
-            $c->get(AuthProviderInterface::class)
+    CreatePartieAction::class => function (ContainerInterface $c) {
+        return new CreatePartieAction(
+            $c->get(PartieServiceInterface::class)
         );
     },
-    RefreshAction::class => function (ContainerInterface $c) {
-        return new RefreshAction(
-            $c->get(AuthentificationServiceInterface::class)
+
+    GetPartiesAction::class => function (ContainerInterface $c) {
+        return new GetPartiesAction(
+            $c->get(PartieServiceInterface::class)
         );
     },
-    ValidateAction::class => function (ContainerInterface $c) {
-        return new ValidateAction(
-            $c->get(AuthProviderInterface::class)
+
+    GetPartieByIdAction::class => function (ContainerInterface $c) {
+        return new GetPartieByIdAction(
+            $c->get(PartieServiceInterface::class)
         );
     },
-    SignupAction::class => function (ContainerInterface $c) {
-        return new SignupAction(
-            $c->get(AuthProviderInterface::class)
+
+    GetPartiesByUserAction::class => function (ContainerInterface $c) {
+        return new GetPartiesByUserAction(
+            $c->get(PartieServiceInterface::class)
         );
     },
+    
 ];
