@@ -6,6 +6,7 @@ use geoquizz\core\domain\entities\partie\Partie;
 use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
 use geoquizz\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use geoquizz\core\repositoryInterfaces\RepositoryInternalServerError;
+use geoquizz\core\services\partie\PartieServiceInterface;
 
 class PDOPartieRepository implements PartieRepositoryInterface
 {
@@ -115,5 +116,18 @@ class PDOPartieRepository implements PartieRepositoryInterface
         $stmt->execute(['user_id' => $user_id]);
         $parties = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $parties;
+    }
+
+    public function updateScore(string $id, int $score): void
+    {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE parties SET score = score + :score WHERE id = :id");
+            $stmt->execute(['id' => $id, 'score' => $score]);
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("Partie not found");
+            }
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while updating partie");
+        }
     }
 }

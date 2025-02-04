@@ -81,4 +81,15 @@ class ServicePartie implements ServicePartieInterface
             throw new ServicePartieInternalServerError($e->getMessage());
         }
     }
+
+    public function updateScore(string $id, int $score): void
+    {
+        try {
+            $this->partieRepository->updateScore($id, $score);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException('invalid Partie ID');
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
 }
