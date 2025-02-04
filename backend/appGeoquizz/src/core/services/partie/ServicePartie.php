@@ -24,7 +24,7 @@ class ServicePartie implements ServicePartieInterface
 
     public function createPartie(InputPartieDTO $dto): PartieDTO
     {
-        $partie = new Partie($dto->getNom(), $dto->getToken(), $dto->getNbPhotos(), $dto->getScore(), $dto->getTheme());
+        $partie = new Partie($dto->nom, $dto->token, $dto->nb_photos, $dto->score, $dto->theme);
         $id = $this->partieRepository->save($partie);
         $partie->setID($id);
         return $partie->toDTO();
@@ -33,7 +33,7 @@ class ServicePartie implements ServicePartieInterface
     public function getAllParties(): array
     {
         try {
-            $parties = $this->partieRepository->getAllParties(); // Correct method call
+            $parties = $this->partieRepository->getAllParties();
             $partiesDTO = [];
             foreach ($parties as $partie) {
                 $partiesDTO[] = $partie->toDTO();

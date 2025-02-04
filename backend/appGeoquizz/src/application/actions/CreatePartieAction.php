@@ -1,6 +1,6 @@
 <?php
 
-namespace geoquizz\src\action;
+namespace geoquizz\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,11 +13,12 @@ use Slim\Exception\HttpInternalServerErrorException;
 //routing
 use Slim\Routing\RouteContext;
 //renderer
-use geoquizz\src\renderer\JsonRenderer;
+use geoquizz\application\renderer\JsonRenderer;
 //services
 use geoquizz\core\services\partie\ServicePartieInterface;
 //dto
 use geoquizz\core\dto\partie\InputPartieDTO;
+use geoquizz\application\actions\AbstractAction;
 
 class CreatePartieAction extends AbstractAction 
 {
@@ -51,10 +52,10 @@ class CreatePartieAction extends AbstractAction
             if (filter_var($data["token"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["token"]) {
                 throw new HttpBadRequestException($rq, "Bad data format token");
             }
-            if (filter_var($data["nb_photos"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["nb_photos"]) {
+            if (!filter_var($data["nb_photos"], FILTER_VALIDATE_INT)) {
                 throw new HttpBadRequestException($rq, "Bad data format nb_photos");
             }
-            if (filter_var($data["score"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["score"]) {
+            if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
                 throw new HttpBadRequestException($rq, "Bad data format score");
             }
             if (filter_var($data["theme"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["theme"]) {
@@ -63,7 +64,7 @@ class CreatePartieAction extends AbstractAction
 
             $dto = new InputPartieDTO($data["nom"], $data["token"], $data["nb_photos"], $data["score"], $data["theme"]);
             $partie = $this->partieService->createPartie($dto);
-            $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->getId()]);
+            $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
             $response = [
                 "type" => "resource",
                 "locale" => "FR-fr",
