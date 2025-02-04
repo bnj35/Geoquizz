@@ -6,11 +6,11 @@ $user = "root";
 $password = "pass";
 
 try {
-    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz_auth", $user, $password, [
+    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz_auth", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz", $user, $password, [
+    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
@@ -58,7 +58,7 @@ try {
         VALUES
            ('$partie1Id', '95d394d4-303d-4fa0-908c-454832cb39c6'),   
             ('$partie1Id', '95b18af3-a16f-4515-9f9d-5cf6b3a65b56'),
-            ('$partie2Id', 'a02ab063-770f-4693-aa59-fd4c3a40835a');
+            ('$partie2Id', 'a02ab063-770f-4693-aa59-fd4c3a40835a'),
             ('$partie2Id', '6f2e4c8b-a4a8-472a-a123-428aca470997');
     ";
 
