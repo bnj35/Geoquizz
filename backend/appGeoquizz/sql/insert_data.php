@@ -36,8 +36,8 @@ try {
     $sqlPartie = "
         INSERT INTO Parties (id, token, nb_photos, score, theme)
         VALUES
-            ('$partie1Id', 'abc123', 5, 10, 'Nature'),
-            ('$partie2Id', 'xyz789', 10, 20, 'Architecture');
+            ('$partie1Id', '28Sw4vlZIB1X3FFAYGsM7pJUKUwhBkz9dfa37djHR4ljtiuddY1Z65GzKK9VLl9h', 5, 10, 'Nature'),
+            ('$partie2Id', 'wfmxd0rMAAj6JIZV4QhuvZPKY7FbaALJOmw12rkmKTpLT0Rsudo8eakOifZKOAFa', 10, 20, 'Architecture');
     ";
 
     $pdoGame->exec($sqlPartie);
@@ -56,8 +56,10 @@ try {
     $sqlImage = "
         INSERT INTO Partie_Images (partie_id, image_id)
         VALUES
-            ('$partie1Id', '94aa6aa9-6632-4aa7-a56a-ea658e0a19c2'),
-            ('$partie2Id', '43215f14-37c8-498e-8e6d-a811200ee07a');
+           ('$partie1Id', '95d394d4-303d-4fa0-908c-454832cb39c6'),   
+            ('$partie1Id', '95b18af3-a16f-4515-9f9d-5cf6b3a65b56'),
+            ('$partie2Id', 'a02ab063-770f-4693-aa59-fd4c3a40835a');
+            ('$partie2Id', '6f2e4c8b-a4a8-472a-a123-428aca470997');
     ";
 
     $pdoGame->exec($sqlImage);
