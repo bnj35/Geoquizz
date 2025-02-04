@@ -2,14 +2,19 @@
 
 namespace geoquizz\application\actions;
 
+use geoquizz\core\services\partie\ServicePartieInternalServerError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
 //exceptions
 use Slim\Exception\HttpInternalServerErrorException;
+
 //routing
 use Slim\Routing\RouteContext;
+
 //renderer
 use geoquizz\application\renderer\JsonRenderer;
+
 //services
 use geoquizz\core\services\partie\ServicePartieInterface;
 use geoquizz\core\services\partie\ServicePartie;
@@ -34,7 +39,7 @@ class GetPartiesAction extends AbstractAction
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
             $urlParties = $routeParser->urlFor('getParties');
-            $parties = array_map(function($partie) use ($routeParser) {
+            $parties = array_map(function ($partie) use ($routeParser) {
                 $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
                 return [
                     "id" => $partie->id,
@@ -59,7 +64,7 @@ class GetPartiesAction extends AbstractAction
             ];
             return JsonRenderer::render($rs, 200, $result);
 
-        } catch (\Exception $e) {
+        } catch (ServicePartieInternalServerError $e) {
             error_log("Exception: " . $e->getMessage()); // Log the exception message
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }

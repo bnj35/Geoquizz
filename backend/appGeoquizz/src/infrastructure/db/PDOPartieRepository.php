@@ -1,4 +1,5 @@
 <?php
+
 namespace geoquizz\infrastructure\db;
 
 use Ramsey\Uuid\Uuid;
@@ -6,7 +7,6 @@ use geoquizz\core\domain\entities\partie\Partie;
 use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
 use geoquizz\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use geoquizz\core\repositoryInterfaces\RepositoryInternalServerError;
-use geoquizz\core\services\partie\PartieServiceInterface;
 
 class PDOPartieRepository implements PartieRepositoryInterface
 {
@@ -74,7 +74,7 @@ class PDOPartieRepository implements PartieRepositoryInterface
             }
             return $result;
         } catch (\PDOException $e) {
-            error_log("PDOException: " . $e->getMessage()); 
+            error_log("PDOException: " . $e->getMessage());
             throw new RepositoryInternalServerError("Error while fetching parties");
         }
     }
@@ -112,10 +112,17 @@ class PDOPartieRepository implements PartieRepositoryInterface
 
     public function getPartieByUserId(string $user_id): array
     {
-        $stmt = $this->pdo->prepare("SELECT partie_id FROM partie_users WHERE user_id = :user_id");
-        $stmt->execute(['user_id' => $user_id]);
-        $parties = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $parties;
+        try {
+            $stmt = $this->pdo->prepare("SELECT partie_id FROM partie_users WHERE user_id = :user_id");
+            if ($stmt === false) {
+                throw new RepositoryEntityNotFoundException("Partie not found");
+            }
+            $stmt->execute(['user_id' => $user_id]);
+            $parties = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $parties;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching parties");
+        }
     }
 
     public function updateScore(string $id, int $score): void
