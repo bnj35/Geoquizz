@@ -2,25 +2,32 @@
 
 namespace geoquizz\application\actions;
 
+use geoquizz\core\services\partie\ServicePartieInternalServerError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
 //validation
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
+
 //exceptions
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
+
 //routing
 use Slim\Routing\RouteContext;
+
 //renderer
 use geoquizz\application\renderer\JsonRenderer;
+
 //services
 use geoquizz\core\services\partie\ServicePartieInterface;
+
 //dto
 use geoquizz\core\dto\partie\InputPartieDTO;
 use geoquizz\application\actions\AbstractAction;
 
-class CreatePartieAction extends AbstractAction 
+class CreatePartieAction extends AbstractAction
 {
     private ServicePartieInterface $partieService;
 
@@ -75,12 +82,8 @@ class CreatePartieAction extends AbstractAction
             ];
 
             return JsonRenderer::render($rs, 201, $response);
-            
-        } catch (HttpBadRequestException $e) {
-            throw $e;
-        } catch (HttpInternalServerErrorException $e) {
-            throw $e;
-        } catch (\Exception $e) {
+
+        } catch (ServicePartieInternalServerError $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
     }
