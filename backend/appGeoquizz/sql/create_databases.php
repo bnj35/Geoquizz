@@ -10,8 +10,8 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    $pdo->exec("CREATE DATABASE geoguizz;");
-    $pdo->exec("CREATE DATABASE geoguizz_auth;");
+    $pdo->exec("CREATE DATABASE geoquizz;");
+    $pdo->exec("CREATE DATABASE geoquizz_auth;");
 
     echo "Bases de données créées avec succès !\n";
 
@@ -21,7 +21,7 @@ try {
 }
 
 try {
-    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz_auth", $user, $password, [
+    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz_auth", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
@@ -38,9 +38,9 @@ try {
     echo "Table Users créée avec succès !\n";
     $stmt = $pdoAuth->query("SELECT * FROM information_schema.tables WHERE table_name = 'users'");
     if ($stmt->rowCount() == 0) {
-        echo "⚠️ La table Users n'existe pas dans geoguizz_auth !\n";
+        echo "⚠️ La table Users n'existe pas dans geoquizz_auth !\n";
     } else {
-        echo "✅ La table Users a bien été créée dans geoguizz_auth.\n";
+        echo "✅ La table Users a bien été créée dans geoquizz_auth.\n";
     }
 
 
@@ -49,7 +49,7 @@ try {
 }
 
 try {
-    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz", $user, $password, [
+    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 

@@ -6,11 +6,11 @@ $user = "root";
 $password = "pass";
 
 try {
-    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz_auth", $user, $password, [
+    $pdoAuth = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz_auth", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoguizz", $user, $password, [
+    $pdoGame = new PDO("pgsql:host=$host;port=$port;dbname=geoquizz", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
