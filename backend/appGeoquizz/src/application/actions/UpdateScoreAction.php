@@ -21,6 +21,12 @@ use geoquizz\application\renderer\JsonRenderer;
 use geoquizz\core\services\partie\ServicePartieInterface;
 use geoquizz\application\actions\AbstractAction;
 
+//validation
+use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validator;
+use Slim\Exception\HttpBadRequestException;
+
+
 class UpdateScoreAction extends AbstractAction
 {
     private ServicePartieInterface $partieService;
@@ -36,6 +42,17 @@ class UpdateScoreAction extends AbstractAction
             $id = $args['id'];
             $data = $rq->getParsedBody();
             $score = $data['score'];
+
+            $scoreInputValidator = Validator::key('score', Validator::intType()->notEmpty());
+            try{
+                $scoreInputValidator->assert($data);
+                if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
+                    throw new HttpBadRequestException($rq, "Bad data format score");
+                }
+            } catch (NestedValidationException $e) {
+                throw new HttpBadRequestException($rq, $e->getFullMessage());
+            }
+
             $this->partieService->updateScore($id, $score);
             $response = [
                 'type' => 'resource',

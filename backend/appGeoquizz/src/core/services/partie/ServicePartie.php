@@ -81,6 +81,9 @@ class ServicePartie implements ServicePartieInterface
     {
         try {
             $partieIds = $this->partieRepository->getPartieByUserId($userId);
+            if (empty($partieIds)) {
+                throw new RepositoryEntityNotFoundException('No parties found for this user');
+            }
             $parties = [];
             foreach ($partieIds as $partieId) {
                 $parties[] = $this->partieRepository->getPartieById($partieId['partie_id'])->toDTO();
