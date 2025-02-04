@@ -56,11 +56,29 @@ class ServicePartie implements ServicePartieInterface
         }
     }
 
-    public function getPartiesByUser(string $user): array
+    public function getPartiesByUser(string $user_id): array
     {
-        $parties = $this->partieRepository->getPartiesByEmail($user);
-        return array_map(function($partie) {
-            return $partie->toDTO();
-        }, $parties);
+        $partieIds = $this->partieRepository->getPartieByUserId($user_id);
+        $parties = [];
+        foreach ($partieIds as $partieId) {
+            $parties[] = $this->getPartieById($partieId['partie_id']);
+        }
+        return $parties;
+    }
+
+    public function getPartieByUserId(string $userId): array
+    {
+        try {
+            $partieIds = $this->partieRepository->getPartieByUserId($userId);
+            $parties = [];
+            foreach ($partieIds as $partieId) {
+                $parties[] = $this->partieRepository->getPartieById($partieId['partie_id'])->toDTO();
+            }
+            return $parties;
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException('invalid User ID');
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
     }
 }
