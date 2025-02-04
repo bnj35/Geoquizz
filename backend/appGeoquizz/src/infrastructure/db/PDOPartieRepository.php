@@ -108,4 +108,12 @@ class PDOPartieRepository implements PartieRepositoryInterface
             throw new RepositoryInternalServerError("Error while fetching parties");
         }
     }
+
+    public function getPartieByUserId(string $user_id): array
+    {
+        $stmt = $this->pdo->prepare("SELECT partie_id FROM partie_users WHERE user_id = :user_id");
+        $stmt->execute(['user_id' => $user_id]);
+        $parties = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $parties;
+    }
 }

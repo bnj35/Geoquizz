@@ -11,5 +11,5 @@ interface ServicePartieInterface
     public function createPartie(InputPartieDTO $dto): PartieDTO;
     public function getAllParties(): array;
     public function getPartieById(string $id): PartieDTO;
-    public function getPartiesByUser(string $user): array;
+    public function getPartieByUserId(string $userId): array;
 }

@@ -13,4 +13,6 @@ interface PartieRepositoryInterface
     public function getPartieById(string $id): Partie;
 
     public function getPartiesByEmail(string $email): array;
+
+    public function getPartieByUserId(string $user_id): array;
 }

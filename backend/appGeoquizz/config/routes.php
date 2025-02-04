@@ -15,10 +15,6 @@ return function(\Slim\App $app): \Slim\App {
     $app->get('/parties/{id}', GetPartieByIdAction::class)->setName('getPartieById');
     
     $app->get('/users/{id}/parties', GetPartiesByUserAction::class)->setName('getPartiesByUser');
-    $app->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("Hello world!");
-        return $response;
-    });
 
     return $app;
 };
