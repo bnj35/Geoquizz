@@ -29,7 +29,7 @@ class DisplayStatAction extends AbstractAction
                 'locale' => 'fr-FR',
                 'stats' => $stats
             ];
-            JsonRenderer::render($rs, 200, $response);
+            return JsonRenderer::render($rs, 200, $response);
         }catch (StatsServiceNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         } catch (StatsServiceInternalServerErrorException $e) {
