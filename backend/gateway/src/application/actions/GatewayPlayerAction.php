@@ -14,6 +14,8 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
 
+use geoquizz\application\renderer\JsonRenderer;
+
 use GuzzleHttp\Client;
 
 class GatewayPlayerAction extends GatewayAbstractAction
@@ -40,7 +42,7 @@ class GatewayPlayerAction extends GatewayAbstractAction
         try {
             $response = $this->client->request($method, $path, $options);
             $rs->getBody()->write($response->getBody()->getContents());
-            return $rs->withStatus($response->getStatusCode());
+            return JsonRenderer::render($rs, $response->getStatusCode());
         } catch (ConnectException | ServerException $e) {
             throw new HttpInternalServerErrorException($rq, " internal server error");
         } catch (ClientException $e) {

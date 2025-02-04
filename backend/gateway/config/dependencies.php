@@ -1,12 +1,11 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use geoquizz\application\actions\GatewayPraticienAction;
-use geoquizz\application\actions\GatewayRdvAction;
 use geoquizz\application\actions\GatewayAuthAction;
 use geoquizz\core\services\auth\ServiceAuthentificationInterface;
 use GuzzleHttp\Client;
 use geoquizz\application\middleware\AuthMiddleware;
+use geoquizz\application\actions\GatewayPlayerAction;
 
 return [
 
@@ -25,7 +24,7 @@ return [
 
     // Guzzle clients for microservices
     'player.client' => function (ContainerInterface $c) {
-        return new Client(['base_uri' => 'http://api.geoquizz.geoquizz/']);
+        return new Client(['base_uri' => 'http://api.services.geoquizz/']);
     },
     'auth.client' => function (ContainerInterface $c) {
         return new Client(['base_uri' => 'http://api.auth.geoquizz/']);
