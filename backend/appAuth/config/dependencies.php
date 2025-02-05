@@ -13,7 +13,9 @@ use geoquizz\application\provider\auth\JWTManager;
 use geoquizz\core\repositoryInterfaces\AuthRepositoryInterface;
 use geoquizz\core\services\auth\AuthentificationService;
 use geoquizz\core\services\auth\AuthentificationServiceInterface;
+use geoquizz\core\services\stats\StatsServiceInterface;
 use geoquizz\infrastructure\db\PDOAuthRepository;
+use geoquizz\infrastructure\http\StatsServiceHTTP;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -38,6 +40,20 @@ return [
         return $pdo_auth;
     },
 
+    'client_stats' => function (ContainerInterface $c){
+        return new \GuzzleHttp\Client([
+            'base_uri' => 'http://api.services.geoquizz',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ]
+        ]);
+    },
+
+    StatsServiceInterface::class => function (ContainerInterface $c) {
+        return new StatsServiceHTTP($c->get('client_stats'));
+    },
+
     // Repositories
     AuthRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOAuthRepository($c->get('pdo_auth'));
@@ -55,6 +71,7 @@ return [
     AuthentificationServiceInterface::class => function (ContainerInterface $c) {
         return new AuthentificationService(
             $c->get(AuthRepositoryInterface::class),
+            $c->get(StatsServiceInterface::class)
         );
     },
 
