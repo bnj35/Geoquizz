@@ -2,7 +2,7 @@
 
 namespace geoquizz\core\services\partie;
 
-class AuthorizationPratieServiceInternalServerErrorException extends \Exception
+class AuthorizationPartieServiceInternalServerErrorException extends \Exception
 {
 
 }
