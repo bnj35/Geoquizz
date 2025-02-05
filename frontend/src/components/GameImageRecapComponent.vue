@@ -38,6 +38,9 @@ function setMarkers(currentLat, currentLon, actualLat, actualLon) {
   }
 
   // Ajouter une ligne en pointillés entre les deux points
+  if (gameStore.currentLat === null || gameStore.currentLon === null) {
+    return;
+  }
   L.polyline(
     [[actualLat, actualLon], [currentLat, currentLon]],
     { color: 'black', weight: 3, dashArray: '5, 10' } // Ligne bleue pointillée
