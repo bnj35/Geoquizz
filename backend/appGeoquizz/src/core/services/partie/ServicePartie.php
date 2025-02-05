@@ -27,7 +27,7 @@ class ServicePartie implements ServicePartieInterface
     public function createPartie(InputPartieDTO $dto): PartieDTO
     {
         try {
-            $partie = new Partie($dto->nom, $dto->token, $dto->nb_photos, $dto->score, $dto->theme);
+            $partie = new Partie($dto->nom, $dto->token, $dto->nb_photos, $dto->score, $dto->theme, $dto->temps);
             $id = $this->partieRepository->save($partie);
             $partie->setID($id);
             return $partie->toDTO();
@@ -66,12 +66,12 @@ class ServicePartie implements ServicePartieInterface
     {
         try {
 
-            $partieIds = $this->partieRepository->getPartieByUserId($user_id);
-            $parties = [];
-            foreach ($partieIds as $partieId) {
-                $parties[] = $this->getPartieById($partieId['partie_id']);
+            $partie = $this->partieRepository->getPartieByUserId($user_id);
+            $partiesDTO = [];
+            foreach ($partie as $p) {
+                $partiesDTO[] = $p->toDTO();
             }
-            return $parties;
+            return $partiesDTO;
         } catch (RepositoryInternalServerError $e) {
             throw new ServicePartieInternalServerError($e->getMessage());
         }
@@ -80,17 +80,14 @@ class ServicePartie implements ServicePartieInterface
     public function getPartieByUserId(string $userId): array
     {
         try {
-            $partieIds = $this->partieRepository->getPartieByUserId($userId);
-            if (empty($partieIds)) {
-                throw new RepositoryEntityNotFoundException('No parties found for this user');
+            $parties = $this->partieRepository->getPartieByUserId($userId);
+            $partiesDTO = [];
+            foreach ($parties as $partie) {
+                $partiesDTO[] = $partie->toDTO();
             }
-            $parties = [];
-            foreach ($partieIds as $partieId) {
-                $parties[] = $this->partieRepository->getPartieById($partieId['partie_id'])->toDTO();
-            }
-            return $parties;
+            return $partiesDTO;
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new ServicePartieInvalidDataException('invalid User ID');
+            throw new ServicePartieInvalidDataException($e->getMessage());
         } catch (RepositoryInternalServerError $e) {
             throw new ServicePartieInternalServerError($e->getMessage());
         }
@@ -101,7 +98,7 @@ class ServicePartie implements ServicePartieInterface
         try {
             $this->partieRepository->updateScore($id, $score);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new ServicePartieInvalidDataException('invalid Partie ID');
+            throw new ServicePartieInvalidDataException($e->getMessage());
         } catch (RepositoryInternalServerError $e) {
             throw new ServicePartieInternalServerError($e->getMessage());
         }

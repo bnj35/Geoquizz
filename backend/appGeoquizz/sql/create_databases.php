@@ -58,6 +58,9 @@ try {
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
             nom VARCHAR(255) NOT NULL,
             token VARCHAR(255) NOT NULL UNIQUE,
+            status INT NOT NULL DEFAULT 0,
+            temps INT NOT NULL DEFAULT 60,
+            distance INT NOT NULL DEFAULT 100,
             nb_photos INT NOT NULL,
             score INT NOT NULL DEFAULT 0,
             theme VARCHAR(100) NOT NULL
