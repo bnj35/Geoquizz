@@ -1,25 +1,67 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useGameStore = defineStore('game', () => {
-  //Parties
-  const gameState = ref('playing')
-  const currentLat = ref(null)
-  const currentLon = ref(null)
-  const actualLat = ref('48.6899712')
-  const actualLon = ref('6.1820983')
-  const distance = ref(0)
-  const score = ref(0)
-  const timeLeft = ref(30) //Voir en fonction des différentes series
-  const attemptsLeft = ref(10) //Voir en fonction des différentes series
+export const useGameStore = defineStore('game', {
+  state: () => ({
+    gameState: 'playing',
+    currentLat: null,
+    currentLon: null,
+    actualLat: '48.6899712',
+    actualLon: '6.1820983',
 
-  //Series
-  const seriePlayed = ref('Nancy et ses environs') //Voir en fonction des différentes series
-  const serieLat = ref('48.6899712')
-  const serieLon = ref('6.1820983')
+    distance: 0,
+    distanceKm: 0,
 
-  const imageLat = ref('48.6899712')
-  const imageLon = ref('6.1820983')
+    maxDistance: 10000, //GAME INIT
 
-  return { gameState, currentLat, currentLon, actualLat, actualLon, distance, score, serieLat, serieLon, timeLeft, attemptsLeft, seriePlayed, imageLat, imageLon }
-})
+    score: 0,
+    scores: [], // NE PAS PERSISTE
+    totalScore: 0, // DOIT PERSISTE
+
+    timeLeft: 30, //GAME INIT
+    timerStarted: false, //GAME INIT
+
+    images: ['../assets/images/1.jpg', '../assets/images/2.jpg', '../assets/images/3.jpg', '../assets/images/4.jpg'],
+    imagesPlayed: [],
+    imagesLeft: 10, //GAME INIT
+    imageLat: '48.6899712',
+    imageLon: '6.1820983',
+
+    seriePlayed: 'Nancy et ses environs',
+    serieLat: '48.6899712',
+    serieLon: '6.1820983',
+
+    defaultLat: '48.866667',
+    defaultLon: '2.333333',
+
+    hasPlayed: false,
+
+  }),
+  actions:{
+    resetGame(){
+      this.gameState = 'playing';
+      this.currentLat = null;
+      this.currentLon = null;
+      this.distance = 0;
+      this.distanceKm = 0;
+      this.score = 0;
+      this.scores = [];
+      this.totalScore = 0;
+      this.timeLeft = 30;
+      this.timerStarted = false;
+      this.imagesPlayed = [];
+      this.imagesLeft = 10;
+      this.hasPlayed = false;
+    }
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: localStorage, // Utilisez sessionStorage si nécessaire
+        paths: [
+          'totalScore'
+        ],
+      }
+    ]
+  }
+});
