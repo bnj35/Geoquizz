@@ -3,8 +3,8 @@
 use Psr\Container\ContainerInterface;
 use geoquizz\application\actions\GatewayAuthAction;
 use geoquizz\core\services\auth\ServiceAuthentificationInterface;
+use geoquizz\application\middlewares\Auth;
 use GuzzleHttp\Client;
-use geoquizz\application\middleware\AuthMiddleware;
 use geoquizz\application\actions\GatewayPlayerAction;
 
 return [
@@ -18,7 +18,9 @@ return [
         $logger->pushHandler(
             new \Monolog\Handler\StreamHandler(
                 $c->get('log.prog.file'),
-                $c->get('log.prog.level')));
+                $c->get('log.prog.level')
+            )
+        );
         return $logger;
     },
 
@@ -30,20 +32,20 @@ return [
         return new Client(['base_uri' => 'http://api.auth.geoquizz/']);
     },
 
-  // Middleware
-    AuthMiddleware::class => function (ContainerInterface $c) {
-    return new AuthMiddleware($c->get('auth.client'));
+    // Middleware
+    Auth::class => function (ContainerInterface $c) {
+        return new Auth($c->get('auth.client'));
     },
 
     //Actions
 
     //player
-    GatewayPlayerAction::class => function(ContainerInterface $c) {
+    GatewayPlayerAction::class => function (ContainerInterface $c) {
         return new GatewayPlayerAction($c->get('player.client'));
     },
 
     //auth
-    GatewayAuthAction::class => function(ContainerInterface $c) {
+    GatewayAuthAction::class => function (ContainerInterface $c) {
         return new GatewayAuthAction($c->get('auth.client'));
     },
 

@@ -38,7 +38,7 @@ class PDOPartieRepository implements PartieRepositoryInterface
                 'distance' => $p->getDistance()
             ]);
         } catch (\PDOException $e) {
-            throw new RepositoryInternalServerError("Error while saving partie");
+            throw new RepositoryInternalServerError($e->getMessage());
         }
         return $p->getID();
     }

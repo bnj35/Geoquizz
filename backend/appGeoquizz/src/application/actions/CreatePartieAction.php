@@ -22,6 +22,7 @@ use geoquizz\application\renderer\JsonRenderer;
 
 //services
 use geoquizz\core\services\partie\ServicePartieInterface;
+use geoquizz\core\services\directus\DirectusInfoServiceInterface;
 
 //dto
 use geoquizz\core\dto\partie\InputPartieDTO;
@@ -30,10 +31,12 @@ use geoquizz\application\actions\AbstractAction;
 class CreatePartieAction extends AbstractAction
 {
     private ServicePartieInterface $partieService;
+    private DirectusInfoServiceInterface $directusService;
 
-    public function __construct(ServicePartieInterface $partieService)
+    public function __construct(ServicePartieInterface $partieService, DirectusInfoServiceInterface $directusService)
     {
         $this->partieService = $partieService;
+        $this->directusService = $directusService;
     }
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
@@ -46,7 +49,7 @@ class CreatePartieAction extends AbstractAction
             $partieInputValidator = Validator::key('nom', Validator::stringType()->notEmpty())
                 ->key('token', Validator::stringType()->notEmpty())
                 ->key('nb_photos', Validator::intType()->notEmpty())
-                ->key('score', Validator::intType()->notEmpty())
+                ->key('score', Validator::intType())
                 ->key('theme', Validator::stringType()->notEmpty())
                 ->key('temps', Validator::intType()->notEmpty());
             try {
@@ -63,9 +66,9 @@ class CreatePartieAction extends AbstractAction
             if (!filter_var($data["nb_photos"], FILTER_VALIDATE_INT)) {
                 throw new HttpBadRequestException($rq, "Bad data format nb_photos");
             }
-            if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
-                throw new HttpBadRequestException($rq, "Bad data format score");
-            }
+            // if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
+            //     throw new HttpBadRequestException($rq, "Bad data format score");
+            // }
             if (filter_var($data["theme"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["theme"]) {
                 throw new HttpBadRequestException($rq, "Bad data format theme");
             }
@@ -76,17 +79,20 @@ class CreatePartieAction extends AbstractAction
             $dto = new InputPartieDTO($data["nom"], $data["token"], $data["nb_photos"], $data["score"], $data["theme"], $data["temps"]);
             $partie = $this->partieService->createPartie($dto);
             $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
+            $serieId = $this->directusService->getSerieIdByTheme($partie->theme);
+            $images = $this->directusService->getImagesBySerieId($serieId, $partie->nb_photos);
+
             $response = [
                 "type" => "resource",
                 "locale" => "FR-fr",
                 "partie" => $partie,
+                "images" => $images,
                 "links" => [
                     "self" => ['href' => $urlPartie],
                 ]
             ];
 
             return JsonRenderer::render($rs, 201, $response);
-
         } catch (ServicePartieInternalServerError $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
