@@ -154,12 +154,22 @@ function processImages($args)
 
     foreach ($images as $image) {
         $imageId = $image["id"];
-        $imageUrl = $image["thumb_2048_url"];
-        $coordinates = $image["computed_geometry"]["coordinates"];
 
-        $filePath = downloadImage($imageUrl, $imageId);
-        if ($filePath) {
-            uploadToDirectus($filePath, $imageId, $coordinates[1], $coordinates[0], $serieId);
+        if (isset($image["thumb_2048_url"])) {
+            $imageUrl = $image["thumb_2048_url"];
+        } else {
+            echo "❌ Image $imageId n'a pas de URL de vignette.\n";
+            continue;
+        }
+
+        if (isset($image["computed_geometry"]["coordinates"])) {
+            $coordinates = $image["computed_geometry"]["coordinates"];
+            $filePath = downloadImage($imageUrl, $imageId);
+            if ($filePath) {
+                uploadToDirectus($filePath, $imageId, $coordinates[1], $coordinates[0], $serieId);
+            }
+        } else {
+            echo "❌ Image $imageId n'a pas de coordonnées.\n";
         }
     }
 }
@@ -167,7 +177,7 @@ function processImages($args)
 function main()
 {
     // ! Variables
-    $limit = 5;
+    $limit = 40;
     $BBOX_NANCY = "-74.260381,40.554459,6.207352,48.896195";
     $BBOX_PARIS = "2.227469,48.788140,2.450647,48.934965";
     $SERIE_ID_NANCY = 1;
