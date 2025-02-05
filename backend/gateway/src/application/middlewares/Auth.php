@@ -10,7 +10,7 @@ use Slim\Exception\HttpUnauthorizedException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
-class AuthMiddleware implements MiddlewareInterface
+class Auth implements MiddlewareInterface
 {
     private Client $client;
 

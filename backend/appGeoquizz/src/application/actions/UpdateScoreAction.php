@@ -54,10 +54,11 @@ class UpdateScoreAction extends AbstractAction
             }
 
             $this->partieService->updateScore($id, $score);
+            $partie = $this->partieService->getPartieById($id);
             $response = [
                 'type' => 'resource',
                 'local' => 'FR-fr',
-                'message' => 'Score updated successfully',
+                'partie' => $partie,
                 'links' => [
                     'self' => [
                         'href' => '/parties/' . $id,

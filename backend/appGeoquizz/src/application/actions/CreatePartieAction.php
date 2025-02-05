@@ -47,7 +47,8 @@ class CreatePartieAction extends AbstractAction
                 ->key('token', Validator::stringType()->notEmpty())
                 ->key('nb_photos', Validator::intType()->notEmpty())
                 ->key('score', Validator::intType()->notEmpty())
-                ->key('theme', Validator::stringType()->notEmpty());
+                ->key('theme', Validator::stringType()->notEmpty())
+                ->key('temps', Validator::intType()->notEmpty());
             try {
                 $partieInputValidator->assert($data);
             } catch (NestedValidationException $e) {
@@ -68,8 +69,11 @@ class CreatePartieAction extends AbstractAction
             if (filter_var($data["theme"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["theme"]) {
                 throw new HttpBadRequestException($rq, "Bad data format theme");
             }
+            if (!filter_var($data["temps"], FILTER_VALIDATE_INT)) {
+                throw new HttpBadRequestException($rq, "Bad data format temps");
+            }
 
-            $dto = new InputPartieDTO($data["nom"], $data["token"], $data["nb_photos"], $data["score"], $data["theme"]);
+            $dto = new InputPartieDTO($data["nom"], $data["token"], $data["nb_photos"], $data["score"], $data["theme"], $data["temps"]);
             $partie = $this->partieService->createPartie($dto);
             $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
             $response = [
