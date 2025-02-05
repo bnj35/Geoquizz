@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
+import {displaySerieImage} from "@/utils/game/GameSystem.js";
 
-const srcGameImage = ref('src/assets/img/stanislas.jpg');
+onMounted(() => {
+  displaySerieImage('./src/assets/img/4.jpg');
+});
+
 </script>
 
 <template>

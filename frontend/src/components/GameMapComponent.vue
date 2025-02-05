@@ -1,13 +1,13 @@
 <script setup>
-import { onMounted } from 'vue'
+import {onMounted, onUnmounted} from 'vue'
 import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import 'leaflet/dist/leaflet.css';
 import { useGameStore } from '@/stores/gameStore'
 import {
   haversineDistance,
   calculateScore,
   calculateTimeLeft,
-  refreshMapOnResize
+  refreshMapOnResize, calculateTotalScore
 } from '@/utils/game/GameSystem.js'
 
 // Access the store
@@ -21,30 +21,38 @@ onMounted(() => {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map)
 
-  // Add a marker to the map at the predefined coordinates:
-  L.marker([48.690280483493176, 6.18667602539062]).addTo(map)
+  let greenIcon = new L.Icon({
+    iconUrl: './src/assets/img/marker-icon-green.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
 
   map.on('click', function (e) {
     if (currentMarker) {
       map.removeLayer(currentMarker)
     }
-    currentMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+    currentMarker = L.marker([e.latlng.lat, e.latlng.lng], {icon: greenIcon}).addTo(map)
 
     gameStore.currentLat = e.latlng.lat
     gameStore.currentLon = e.latlng.lng
 
     const calculatedDistance = haversineDistance(gameStore.actualLat, gameStore.actualLon, e.latlng.lat, e.latlng.lng)
     gameStore.distance = calculatedDistance
+    gameStore.distanceKm = (calculatedDistance / 1000).toFixed(2)
+    gameStore.hasPlayed = true;
   })
 
-  calculateTimeLeft(gameStore.timeLeft)
   refreshMapOnResize(map)
+  calculateTotalScore();
+  calculateTimeLeft(gameStore.timeLeft)
 })
+
 </script>
 
 <template>
   <div
-    class="absolute bottom-4 right-4 w-[250px] h-[250px] hover:w-[500px] hover:h-[500px] transition-all"
+    class="absolute bottom-4 right-4 w-[250px] h-[250px] hover:w-[500px] hover:h-[500px] select-none transition-all"
     id="game_map"></div>
 </template>
 

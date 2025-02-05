@@ -1,5 +1,6 @@
 import {onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
+import router from "@/router/index.js";
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
@@ -17,18 +18,20 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
 
   const calculatedDistance = R * c; // in meters
 
-  return calculatedDistance;
+  return Math.round(calculatedDistance);
+
 }
 
-export function calculateScore(distance, timeLeft) {
-  if (distance <= 0 || timeLeft <= 0) return 0;
+export function calculateScore(distance, timeLeft, maxDistance) {
+  const store = useGameStore();
+
+  if (distance <= 0 || timeLeft <= 0 || maxDistance <= 0) return 0;
 
   const MAX_SCORE = 5000; // Score maximum possible
-  const MAX_DISTANCE = 3000; // Distance à partir de laquelle le score devient presque nul
-  const TIME_FACTOR = 1.5; // Facteur d'importance du temps
+  const TIME_FACTOR = 1; // Facteur d'importance du temps
 
   // Calcul du score basé sur la distance (plus elle est petite, plus le score est élevé)
-  let distanceScore = Math.max(0, 1 - distance / MAX_DISTANCE);
+  let distanceScore = Math.max(0, 1 - distance / maxDistance);
 
   // Facteur de temps (plus le temps restant est élevé, plus le score est boosté)
   let timeBonus = 1 + (timeLeft / 100) * TIME_FACTOR;
@@ -36,29 +39,37 @@ export function calculateScore(distance, timeLeft) {
   // Score final arrondi
   let score = Math.round(MAX_SCORE * distanceScore * timeBonus);
 
-  //On met en store :
-  const store = useGameStore();
   store.score = score;
+
+  store.scores.push(score);
 
   return score;
 }
 
-
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
+  if (gameStore.timerStarted) return;
+
   if (gameStore.timeLeft <= 0) return;
+
+  gameStore.timerStarted = true;
 
   const timer = setInterval(() => {
     if (gameStore.timeLeft > 0) {
       gameStore.timeLeft--;
-    } else {
+    }
+    else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
-    }
-  }, 1000); // Mise à jour chaque seconde
-}
+      gameStore.timerStarted = false;
 
+      //Force routing :
+      router.push({ name: 'gamerecap' });
+
+    }
+  }, 1000);
+}
 
 export function refreshMapOnResize(map) {
   const mapElement = document.getElementById('game_map');
@@ -74,4 +85,55 @@ export function refreshMapOnResize(map) {
     });
   }
 }
+
+export function calculateTotalScore(){
+
+  const store = useGameStore();
+  let totalScore = store.totalScore;
+  store.scores.forEach(score => {
+    totalScore += score;
+  });
+
+  store.totalScore = totalScore;
+}
+
+export function displaySerieImage(img_src){
+  const image = document.querySelector('#game_image img');
+
+  if (image) {
+    image.src = img_src;
+  }
+  else{
+    //On envoi un toast avec une erreur
+  }
+}
+
+///////////////////////////////////
+//Logique de jeu call via API :
+///////////////////////////////////
+
+async function initGame(){
+  try{
+    const response = await fetch('http://localhost:5000/api/game/init');
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+//Appeler les images d'une série :
+async function callSerieImages(){
+  try{
+    const response = await fetch('http://localhost:5000/api/series/images');
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+
 
