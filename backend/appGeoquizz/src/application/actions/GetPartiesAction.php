@@ -3,6 +3,7 @@
 namespace geoquizz\application\actions;
 
 use geoquizz\core\services\partie\ServicePartieInternalServerError;
+use geoquizz\core\services\partie\ServicePartieInvalidDataException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -10,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpInternalServerErrorException;
 
 //routing
+use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 
 //renderer
@@ -33,9 +35,6 @@ class GetPartiesAction extends AbstractAction
     {
         try {
             $parties = $this->partieService->getAllParties();
-            if (empty($parties)) {
-                error_log("No parties found");
-            }
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
             $urlParties = $routeParser->urlFor('getParties');
@@ -65,8 +64,9 @@ class GetPartiesAction extends AbstractAction
             return JsonRenderer::render($rs, 200, $result);
 
         } catch (ServicePartieInternalServerError $e) {
-            error_log("Exception: " . $e->getMessage()); // Log the exception message
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
+        }catch (ServicePartieInvalidDataException $e){
+            throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
 }
