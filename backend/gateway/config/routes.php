@@ -24,5 +24,7 @@ return function(App $app):App {
 
     $app->patch('/parties/{id}/score', GatewayPlayerAction::class)->setName('updateScore');
 
+    $app->patch('/parties/{id}/done', GatewayPlayerAction::class)->setName('closePartie');
+
     return $app;
 };
