@@ -53,7 +53,6 @@ export function calculateTimeLeft() {
 
   if (gameStore.timeLeft <= 0) return;
 
-  gameStore.time = 30;
   gameStore.timerStarted = true;
 
   const timer = setInterval(() => {

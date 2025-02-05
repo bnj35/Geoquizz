@@ -5,8 +5,6 @@
 
   const gameStore = useGameStore();
 
-  gameStore.timeLeft = 30;
-
 </script>
 
 <template>
