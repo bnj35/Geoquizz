@@ -17,18 +17,20 @@ async function createParty() {
     //   "temps": 10
     // });
     //
-    // const response = await api.post('/parties', {
-    //   "nom": "partiddefefegziuiebugezguizeguibie3dede",
-    //   "token": "dededf",
-    //   "nb_photos": 3,
-    //   "score": 10,
-    //   "theme": "Nancy",
-    //   "temps": 10
-    // });
-    const response = await axios.get('http://gateway/parties');
-    console.log(response);
-    console.log(response.data);
-    const data = await response.json();
+    const response = await api.post('/parties', {
+      "nom": "partiddefefegziuiebugezguizeguibie3dede",
+      "token": "dededf",
+      "nb_photos": 3,
+      "score": 10,
+      "theme": "Nancy",
+      "temps": 10
+    });
+
+    const data = response.data;
+    // const response = await axios.get('http://gateway/parties');
+    // console.log(response);
+    // console.log(response.data);
+    // const data = await response.json();
     return data;
   } catch (error) {
     console.error(error);
