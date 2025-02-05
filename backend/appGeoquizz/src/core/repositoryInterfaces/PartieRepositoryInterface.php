@@ -17,4 +17,6 @@ interface PartieRepositoryInterface
     public function getPartieByUserId(string $user_id): array;
 
     public function updateScore(string $id, int $score): void;
+
+    public function closePartie(string $id):void;
 }

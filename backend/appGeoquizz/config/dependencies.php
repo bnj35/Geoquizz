@@ -20,6 +20,7 @@ use geoquizz\application\actions\CreateStatAction;
 use geoquizz\application\actions\GetPartiesAction;
 use geoquizz\application\actions\GetPartieByIdAction;
 use geoquizz\application\actions\GetPartiesByUserAction;
+use geoquizz\application\actions\ClosePartieAction;
 use GuzzleHttp\Client;
 
 return [
@@ -126,6 +127,12 @@ return [
 
     UpdateScoreAction::class => function (ContainerInterface $c) {
         return new UpdateScoreAction(
+            $c->get(ServicePartieInterface::class)
+        );
+    },
+
+    ClosePartieAction::class => function (ContainerInterface $c){
+        return new ClosePartieAction(
             $c->get(ServicePartieInterface::class)
         );
     }
