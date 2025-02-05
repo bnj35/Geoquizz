@@ -6,10 +6,10 @@
 </script>
 
 <template>
-  <GameDetailsComponent/>
-  <GameImageComponent/>
-  <GameMapComponent/>
-  <GameConfirmComponent/>
+    <GameDetailsComponent/>
+    <GameImageComponent/>
+    <GameMapComponent/>
+    <GameConfirmComponent/>
 </template>
 
 <style scoped>
