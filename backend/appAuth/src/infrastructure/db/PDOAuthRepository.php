@@ -92,4 +92,22 @@ class PDOAuthRepository implements AuthRepositoryInterface
             throw new RepositoryInternalServerError("Error while fetching users");
         }
     }
+
+    public function getUsers(): array
+    {
+        try{
+            $stmt = $this->pdo->prepare("SELECT * FROM users");
+            $stmt->execute();
+            $users = $stmt->fetchAll();
+            $result = [];
+            foreach ($users as $user) {
+                $u =  new User($user['email'], $user['password'], $user['role']);
+                $u->setID($user['id']);
+                $result[] = $u;
+            }
+            return $result;
+        }catch (\PDOException $e){
+            throw new RepositoryInternalServerError("Error while fetching users");
+        }
+    }
 }

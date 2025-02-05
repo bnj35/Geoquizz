@@ -10,5 +10,6 @@ interface AuthRepositoryInterface
     public function getUserByEmail(string $email): User;
     public function getUserById(string $id): User;
     public function getUsersByRole(int $role): array;
+    public function getUsers(): array;
 
 }
