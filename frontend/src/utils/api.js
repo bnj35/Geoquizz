@@ -1,15 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 
-export default {
+export function useAPI() {
+    const apiBase = import.meta.env.VITE_API_BASE_URL;
 
-  install: (app, {baseUrl}) => {
-    app.config.globalProperties.$api = () => {
-      return axios.create({
-        baseURL: baseUrl,
+    const api = axios.create({
+        baseURL: apiBase,
         headers: {
-          "Content-type": "application/json",
-        },
-      });
-    };
-  }
-};
+            'Content-Type': 'application/json',
+        }
+    });
+    return api;
+}

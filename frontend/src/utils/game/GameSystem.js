@@ -1,6 +1,7 @@
 import {getCurrentInstance, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
+import {useAPI} from "@/utils/api.js";
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
@@ -133,10 +134,13 @@ async function callSerieImages() {
 
 export async function signIn(email, password) {
   try {
-    const { proxy } = getCurrentInstance();
-    const api = proxy.$api();
+    const api = useAPI();
 
-    const response = await api.post('/signin', {email, password});
+    const response = await api.post('/signin', {}, {
+      headers: {
+        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+      }
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -146,9 +150,13 @@ export async function signIn(email, password) {
 
 export async function signUp(email, password) {
   try {
-    const { proxy } = getCurrentInstance();
-    const api = proxy.$api();
-    const response = await api.post('/signup', {email, password});
+    const api = useAPI();
+
+    const response = await api.post('/signup', {}, {
+      headers: {
+        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+      }
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
