@@ -1,4 +1,5 @@
 <?php
+
 namespace geoquizz\application\actions;
 
 use geoquizz\application\actions\AbstractAction;
@@ -11,6 +12,7 @@ use geoquizz\core\services\partie\ServicePartieInvalidDataException;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
+
 //renderer
 use geoquizz\application\renderer\JsonRenderer;
 
@@ -43,12 +45,11 @@ class ClosePartieAction extends AbstractAction
             ];
 
             return JsonRenderer::render($rs, 200, $response);
-        } 
-        catch (ServicePartieInternalServerError $e) {
-        throw new HttpInternalServerErrorException($rq, $e->getMessage());
-    } catch (ServicePartieInvalidDataException $e) {
-        throw new HttpNotFoundException($rq, $e->getMessage());
-    }
+        } catch (ServicePartieInternalServerError $e) {
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
+        } catch (ServicePartieInvalidDataException $e) {
+            throw new HttpNotFoundException($rq, $e->getMessage());
+        }
 
     }
 

@@ -3,6 +3,7 @@
 namespace geoquizz\application\actions;
 
 use geoquizz\core\services\partie\ServicePartieInternalServerError;
+use geoquizz\core\services\partie\ServicePartieInvalidDataException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,6 +16,7 @@ use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 
 //routing
+use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 
 //renderer
@@ -95,6 +97,8 @@ class CreatePartieAction extends AbstractAction
             return JsonRenderer::render($rs, 201, $response);
         } catch (ServicePartieInternalServerError $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
+        } catch (ServicePartieInvalidDataException $e) {
+            throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
 }
