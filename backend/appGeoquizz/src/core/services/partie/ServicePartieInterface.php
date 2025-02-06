@@ -17,6 +17,7 @@ interface ServicePartieInterface
     public function setUserId(string $id, string $user_id):void;
     public function getEmailByPartieId(string $id):string;
     public function setPartieImage(array $images, string $partie_id):array;
+    public function getUserIdByPartieId(string $id): string;
 
 
 }

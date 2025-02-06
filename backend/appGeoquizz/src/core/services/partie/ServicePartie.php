@@ -153,4 +153,16 @@ class ServicePartie implements ServicePartieInterface
             throw new ServicePartieInternalServerError($e->getMessage());
         }
     }
+
+    public function getUserIdByPartieId(string $id): string
+    {
+        try{
+            $userId = $this->partieRepository->getUserIdByPartieId($id);
+            return $userId;
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
 }

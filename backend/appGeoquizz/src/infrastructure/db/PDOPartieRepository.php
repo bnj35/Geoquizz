@@ -152,6 +152,20 @@ class PDOPartieRepository implements PartieRepositoryInterface
         }
     }
 
+    public function getUserIdByPartieId(string $id): string 
+    {
+        try{
+            $stmt = $this->pdo->prepare("SELECT user_id FROM partie_users WHERE partie_id = :id");
+            $stmt->execute(['id' => $id]);
+            $userId = $stmt->fetchColumn();
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("user id not found");
+            }
+            return $userId;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
+        }
+    }
 
     public function setPartieImage(array $images, string $partie_id):array
     {
