@@ -6,6 +6,7 @@ use geoquizz\application\provider\auth\AuthProviderInterface;
 use geoquizz\application\renderer\JsonRenderer;
 use geoquizz\core\dto\auth\CredentialsDTO;
 use geoquizz\core\services\auth\AuthentificationServiceBadDataException;
+use geoquizz\core\services\auth\AuthentificationServiceInterface;
 use geoquizz\core\services\auth\AuthentificationServiceInternalServerErrorException;
 use geoquizz\core\services\auth\AuthentificationServiceNotFoundException;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +23,7 @@ class SignupAction extends AbstractAction
 {
     private AuthProviderInterface $authnProviderInterface;
 
-    public function __construct(AuthProviderInterface $authnProviderInterface){
+    public function __construct(AuthProviderInterface $authnProviderInterface,){
         $this->authnProviderInterface = $authnProviderInterface;
     }
 
@@ -42,7 +43,7 @@ if ($email != null) {
     $channel->queue_declare('notification_queue', false, true, false, false, false);
     $channel->queue_bind('notification_queue', 'notification_exchange');
     $user = explode('@', $email)[0];
-    
+
     $messageData = [
         'event' => 'CREATE',
         'recipient' => [
@@ -51,10 +52,10 @@ if ($email != null) {
         ],
         'details' => " Welcome to GeoQuizz, $user! You have successfully created an account."
     ];
-    
+
     $msg = new AMQPMessage(json_encode($messageData), ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
     $channel->basic_publish($msg, 'notification_exchange');
-    
+
     $channel->close();
     $connection->close();
     };

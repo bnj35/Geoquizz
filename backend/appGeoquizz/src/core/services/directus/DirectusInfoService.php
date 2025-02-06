@@ -3,6 +3,11 @@
 namespace geoquizz\core\services\directus;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
+use geoquizz\core\services\directus\ServiceDirectusInvalidDataException;
+use geoquizz\core\services\directus\ServiceDirectusInternalServerError;
 use geoquizz\core\services\directus\DirectusInfoServiceInterface;
 
 class DirectusInfoService implements DirectusInfoServiceInterface
@@ -22,11 +27,12 @@ class DirectusInfoService implements DirectusInfoServiceInterface
             $serieId = $data['data'][0]['id'];
 
             return $serieId;
-        } catch (\Exception $e) {
-            return [
-                'error' => 'SerieId not found',
-                'message' => $e->getMessage()
-            ];
+        } catch (ConnectException|ServerException $e) {
+            throw new ServiceDirectusInternalServerError($e->getMessage());
+        } catch (ClientException $e) {
+            match ($e->getCode()) {
+                400 => throw new ServiceDirectusInvalidDataException($e->getMessage()),
+            };
         }
     }
 
@@ -43,11 +49,12 @@ class DirectusInfoService implements DirectusInfoServiceInterface
             }, $images);
 
             return $images;
-        } catch (\Exception $e) {
-            return [
-                'error' => 'Images not found',
-                'message' => $e->getMessage()
-            ];
+        } catch (ConnectException|ServerException $e) {
+            throw new ServiceDirectusInternalServerError($e->getMessage());
+        } catch (ClientException $e) {
+            match ($e->getCode()) {
+                400 => throw new ServiceDirectusInvalidDataException($e->getMessage()),
+            };
         }
     }
 }

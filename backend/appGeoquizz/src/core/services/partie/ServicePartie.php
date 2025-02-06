@@ -103,4 +103,15 @@ class ServicePartie implements ServicePartieInterface
             throw new ServicePartieInternalServerError($e->getMessage());
         }
     }
+
+    public function closePartie(string $id):void
+    {
+        try {
+            $this->partieRepository->closePartie($id);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
 }

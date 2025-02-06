@@ -158,4 +158,17 @@ class PDOPartieRepository implements PartieRepositoryInterface
             throw new RepositoryInternalServerError("Error while updating partie");
         }
     }
+
+    public function closePartie(string $id):void
+    {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE parties SET status = 1 WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("Partie not found");
+            }
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
+        }
+    }
 }
