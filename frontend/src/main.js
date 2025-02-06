@@ -15,6 +15,7 @@ const pinia = createPinia();
 pinia.use(piniaPersist)
 app.use(pinia)
 app.use(api, {baseUrl: import.meta.env.VITE_API_BASE_URL})
+console.log(import.meta.env.VITE_API_BASE_URL)
 app.use(router)
 
 app.mount('#app')

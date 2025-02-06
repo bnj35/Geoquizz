@@ -125,13 +125,13 @@ export function createParty() {
   }
 
   const api = instance.appContext.config.globalProperties.$api(); // ✅ Récupération de l'instance Axios
-
+  console.log(api)
   if (!api) {
     console.error("❌ Erreur : l'instance API n'a pas été trouvée !");
     return;
   }
 
-  api.post('/party', {
+  api.post('/parties', {
     nom: "partide3dede",
     token: "tdededeocjjddefvfvkefkken3",
     nb_photos: 3,
