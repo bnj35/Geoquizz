@@ -171,7 +171,8 @@ class ServicePartie implements ServicePartieInterface
     public function getToken($payload): string
     {
         // return JWT::encode($payload, getenv('JWT_SECRET_KEY'), 'HS512');
-        return JWT::encode($payload, 'geoquizz', 'HS512');
+        // return JWT::encode($payload, 'geoquizz', 'HS512');
+        return bin2hex(random_bytes(32));
 
     }
 }
