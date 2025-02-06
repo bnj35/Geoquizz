@@ -113,7 +113,25 @@ export function displaySerieImage(img_src){
 //Logique de jeu call via API :
 ///////////////////////////////////
 
-//Appeler les images d'une série :
+//Créer une partie :
+export function createParty(name, theme, nb_photos, time) {
+  const { proxy } = getCurrentInstance();
+  const api = proxy.$api();
+
+  return api.post('/parties', {
+    nom: name,
+    token: "tdededeocjjddefvfvkefkken3",
+    nb_photos: nb_photos,
+    score: 10,
+    theme: theme,
+    temps: time
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error creating party:', error);
+      throw error;
+    });
+}
 
 
 //Parties :
@@ -130,17 +148,6 @@ export function getParties() {
     });
 }
 
-async function getPartyById(id){
-  try{
-    const response = await fetch(`http://localhost:5000/api/party/${id}`);
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
-}
-
 //OK
 export function getPartiesByUserId(id){
   const { proxy } = getCurrentInstance();
@@ -154,40 +161,37 @@ export function getPartiesByUserId(id){
     });
 }
 
-async function updateParty(id, data){
-  try{
-    const response = await fetch(`http://localhost:5000/api/party/${id}`)
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
+//OK
+export function getUserStats(id){
+  const { proxy } = getCurrentInstance();
+  const api = proxy.$api(); // Call the function to get the axios instance
+
+  return api.get(`/users/${id}/stats`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching user stats:', error);
+      throw error;
+    });
 }
 
-async function updatePartyScore(party_id){
-  try{
-    const response = await fetch(`http://localhost:5000/api/party/${party_id}/score`);
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
+export function updateUserStats(user_stats_id){
+  const { proxy } = getCurrentInstance();
+  const api = proxy.$api(); // Call the function to get the axios instance
+
+  return api.put(`/stats/${user_stats_id}`, {
+    score_total: 0,
+    score_moyen: 0,
+    nb_parties: 0,
+    meilleur_coup: 0,
+    pire_coup: 0
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error updating user stats:', error);
+      throw error;
+    });
 }
 
-async function callSerieImages(){
-  try{
-    const response = await fetch('http://localhost:5000/api/series/images');
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
-}
-
-//Stats :
 
 
 

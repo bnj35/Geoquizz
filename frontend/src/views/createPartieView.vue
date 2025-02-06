@@ -1,5 +1,9 @@
 <script setup>
+  import {createParty} from "@/utils/game/GameSystem.js";
 
+  createParty('test', 'test', 5, 1).then((res) => {
+    console.log(res);
+  });
 </script>
 
 <template>
