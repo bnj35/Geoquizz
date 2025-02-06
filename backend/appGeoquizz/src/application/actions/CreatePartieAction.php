@@ -86,7 +86,9 @@ class CreatePartieAction extends AbstractAction
                 throw new HttpBadRequestException($rq, "Bad data format user_id");
             }
 
-            $dto = new InputPartieDTO($data["nom"], $data["token"], $data["nb_photos"], $data["score"], $data["theme"], $data["temps"], $data["user_id"]);
+            $token = $this->partieService->getToken();
+
+            $dto = new InputPartieDTO($data["nom"], $token, $data["nb_photos"], $data["score"], $data["theme"], $data["temps"], $data["user_id"]);
             $partie = $this->partieService->createPartie($dto);
             $urlPartie = $routeParser->urlFor('getPartieById', ['id' => $partie->id]);
             $serieId = $this->directusService->getSerieIdByTheme($partie->theme);

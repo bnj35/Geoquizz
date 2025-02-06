@@ -165,4 +165,9 @@ class ServicePartie implements ServicePartieInterface
             throw new ServicePartieInternalServerError($e->getMessage());
         }
     }
+
+    public function getToken(): string
+    {
+        return bin2hex(random_bytes(32));
+    }
 }
