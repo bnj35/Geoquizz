@@ -53,7 +53,6 @@ class CreatePartieAction extends AbstractAction
 
             $data = $rq->getParsedBody();
             $partieInputValidator = Validator::key('nom', Validator::stringType()->notEmpty())
-                ->key('token', Validator::stringType()->notEmpty())
                 ->key('nb_photos', Validator::intType()->notEmpty())
                 ->key('score', Validator::intType())
                 ->key('theme', Validator::stringType()->notEmpty())
@@ -66,9 +65,6 @@ class CreatePartieAction extends AbstractAction
             }
             if (filter_var($data["nom"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["nom"]) {
                 throw new HttpBadRequestException($rq, "Bad data format nom");
-            }
-            if (filter_var($data["token"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) !== $data["token"]) {
-                throw new HttpBadRequestException($rq, "Bad data format token");
             }
             if (!filter_var($data["nb_photos"], FILTER_VALIDATE_INT)) {
                 throw new HttpBadRequestException($rq, "Bad data format nb_photos");
@@ -86,7 +82,18 @@ class CreatePartieAction extends AbstractAction
                 throw new HttpBadRequestException($rq, "Bad data format user_id");
             }
 
-            $token = $this->partieService->getToken();
+            $payload = [
+                'aud' => 'geoquizz',
+                "iat" => time(),
+                "exp" => time() + 3600,
+                "sub" => $data["user_id"],
+                "data" => [
+                    "nom" => $data["nom"],
+                    "theme" => $data["theme"],
+                ]
+            ];
+            $payload['exp'] = time() + 3600 * 3;
+            $token = $this->partieService->getToken($payload);
 
             $dto = new InputPartieDTO($data["nom"], $token, $data["nb_photos"], $data["score"], $data["theme"], $data["temps"], $data["user_id"]);
             $partie = $this->partieService->createPartie($dto);
