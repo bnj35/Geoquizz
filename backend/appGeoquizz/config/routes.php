@@ -4,6 +4,7 @@ declare(strict_types=1);
 use geoquizz\application\actions\CreateStatAction;
 use geoquizz\application\actions\DisplayStatAction;
 use geoquizz\application\actions\DisplayStatsAction;
+use geoquizz\application\actions\DisplayStatsByUserIdAction;
 use geoquizz\application\actions\UpdateStatAction;
 use geoquizz\application\actions\CreatePartieAction;
 use geoquizz\application\actions\GetPartiesAction;
@@ -31,6 +32,8 @@ return function(\Slim\App $app):\Slim\App {
     $app->patch('/parties/{id}/score', UpdateScoreAction::class)->setName('updateScore');
 
     $app->patch('/parties/{id}/done', ClosePartieAction::class)->setName('closePartie');
+
+    $app->get('/users/{id}/stats', DisplayStatsByUserIdAction::class);
 
     return $app;
 };
