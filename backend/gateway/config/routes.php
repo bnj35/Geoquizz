@@ -40,6 +40,7 @@ return function(App $app):App {
     $app->post('/validate[/]', GatewayAuthAction::class)->setName('validate');
     $app->get('/users[/]', GatewayAuthAction::class)->setName('users');
     $app->get('/users/{id}[/]', GatewayAuthAction::class)->setName('user');
+    $app->get('/users/{id}/stats[/]', GatewayPlayerAction::class)->setName('getStatsByUser');
 
     $app->get('/assets/{id}',GatewayAssetsAction::class)->setName('getAssets');
 
