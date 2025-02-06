@@ -3,6 +3,8 @@
   import GameImageComponent from "@/components/GameImageComponent.vue";
   import GameDetailsComponent from "@/components/GameDetailsComponent.vue";
   import GameConfirmComponent from "@/components/GameConfirmComponent.vue";
+
+
 </script>
 
 <template>

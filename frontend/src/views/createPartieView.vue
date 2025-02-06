@@ -1,8 +1,11 @@
 <script setup>
   import {createParty} from "@/utils/game/GameSystem.js";
+  import {useUserStore} from "@/stores/userStore.js";
 
-  createParty('test', 'test', 5, 1).then((res) => {
-    console.log(res);
+  const userStore = useUserStore();
+
+  createParty('partidd444frfdgpokljikfdgljikgfjokùfgfrfrede', 'tdededeochytthythyjdvvfffdggffgfdgdgfdgfdgfdftokpokpmghtnyolkmpghtnokpmgtnhyjolkmtnhyjrfrfrjddefcdcvfvkefkken3', 'Nancy', 3, 10, userStore.user_id).then((data) => {
+    console.log(data);
   });
 </script>
 

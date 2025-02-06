@@ -1,4 +1,4 @@
-import {getCurrentInstance, onUnmounted} from "vue";
+import {onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
 import {useAPI} from "@/utils/api.js";
@@ -112,17 +112,24 @@ export function displaySerieImage(img_src) {
 ///////////////////////////////////
 
 //Créer une partie :
-export function createParty(name, theme, nb_photos, time) {
-  const { proxy } = getCurrentInstance();
-  const api = proxy.$api();
+export function initGame(time, distance, nb_photos){
+  const gameStore = useGameStore();
+
+  gameStore.distance = distance;
+  gameStore.timeLeft = time;
+  gameStore.nb_photos = nb_photos;
+}
+export function createParty(name, token, theme, nb_photos, time, user_id) {
+  const api = useAPI();
 
   return api.post('/parties', {
     nom: name,
-    token: "tdededeocjjddefvfvkefkken3",
+    token: token,
     nb_photos: nb_photos,
     score: 10,
     theme: theme,
-    temps: time
+    temps: time,
+    user_id: user_id,
   })
     .then(response => response.data)
     .catch(error => {
@@ -131,12 +138,10 @@ export function createParty(name, theme, nb_photos, time) {
     });
 }
 
-
 //Parties :
 //OK
 export function getParties() {
-  const { proxy } = getCurrentInstance();
-  const api = proxy.$api(); // Call the function to get the axios instance
+  const api = useAPI();
 
   return api.get('/parties')
     .then(response => response.data)
@@ -148,8 +153,7 @@ export function getParties() {
 
 //OK
 export function getPartiesByUserId(id){
-  const { proxy } = getCurrentInstance();
-  const api = proxy.$api(); // Call the function to get the axios instance
+  const api = useAPI();
 
   return api.get(`/users/${id}/parties`)
     .then(response => response.data)
@@ -161,20 +165,18 @@ export function getPartiesByUserId(id){
 
 //OK
 export function getUserStats(id){
-  const { proxy } = getCurrentInstance();
-  const api = proxy.$api(); // Call the function to get the axios instance
+  const api = useAPI();
 
   return api.get(`/users/${id}/stats`)
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching user stats:', error);
       throw error;
-    });
+  });
 }
 
-export function updateUserStats(user_stats_id){
-  const { proxy } = getCurrentInstance();
-  const api = proxy.$api(); // Call the function to get the axios instance
+export function updateUserStats(user_stats_id) {
+  const api = useAPI();
 
   return api.put(`/stats/${user_stats_id}`, {
     score_total: 0,
@@ -188,48 +190,50 @@ export function updateUserStats(user_stats_id){
       console.error('Error updating user stats:', error);
       throw error;
     });
+}
+
 //Appeler les images d'une série :
-async function callSerieImages() {
-  try {
-    const response = await fetch('http://localhost:5000/api/series/images');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
+  async function callSerieImages() {
+    try {
+      const response = await fetch('http://localhost:5000/api/series/images');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
-export async function signIn(email, password) {
-  try {
-    const api = useAPI();
+  export async function signIn(email, password) {
+    try {
+      const api = useAPI();
 
-    const response = await api.post('/signin', {}, {
-      headers: {
-        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
-      }
-    });
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error(error);
+      const response = await api.post('/signin', {}, {
+        headers: {
+          'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
-export async function signUp(email, password) {
-  try {
-    const api = useAPI();
+  export async function signUp(email, password) {
+    try {
+      const api = useAPI();
 
-    const response = await api.post('/signup', {}, {
-      headers: {
-        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
-      }
-    });
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error(error);
+      const response = await api.post('/signup', {}, {
+        headers: {
+          'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
 
 

@@ -4,7 +4,13 @@ import {getUserStats} from "@/utils/game/GameSystem.js";
 
 const userStore = useUserStore();
 
-getUserStats(userStore.user_id);
+getUserStats(userStore.user_id).then((data) => {
+  userStore.score_total = data.stats.score_total;
+  userStore.score_moyen = data.stats.score_moyen;
+  userStore.nb_parties = data.stats.nb_parties;
+  userStore.meilleur_coup = data.stats.meilleur_score;
+  userStore.pire_coup = data.stats.pire_coups;
+});
 </script>
 
 <template>
