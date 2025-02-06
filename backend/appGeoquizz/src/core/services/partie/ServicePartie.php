@@ -10,6 +10,7 @@ use geoquizz\core\dto\partie\InputPartieDTO;
 use geoquizz\core\dto\partie\PartieDTO;
 
 //interfaces
+use geoquizz\core\repositoryInterfaces\RepositoryAuthInterface;
 use geoquizz\core\repositoryInterfaces\PartieRepositoryInterface;
 use geoquizz\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use geoquizz\core\repositoryInterfaces\RepositoryInternalServerError;
@@ -18,18 +19,21 @@ use geoquizz\core\services\partie\ServicePartieInterface;
 class ServicePartie implements ServicePartieInterface
 {
     private PartieRepositoryInterface $partieRepository;
+    private RepositoryAuthInterface $authRepository;
 
-    public function __construct(PartieRepositoryInterface $partieRepository)
+    public function __construct(PartieRepositoryInterface $partieRepository, RepositoryAuthInterface $authRepository)
     {
         $this->partieRepository = $partieRepository;
+        $this->authRepository = $authRepository;
     }
 
     public function createPartie(InputPartieDTO $dto): PartieDTO
     {
         try {
-            $partie = new Partie($dto->nom, $dto->token, $dto->nb_photos, $dto->score, $dto->theme, $dto->temps);
+            $partie = new Partie($dto->nom, $dto->token, $dto->nb_photos, $dto->score, $dto->theme, $dto->temps, $dto->user_id);
             $id = $this->partieRepository->save($partie);
             $partie->setID($id);
+            $this->partieRepository->setUserId($id, $dto->user_id);
             return $partie->toDTO();
         } catch (RepositoryInternalServerError $e) {
             throw new ServicePartieInternalServerError($e->getMessage());
@@ -108,6 +112,41 @@ class ServicePartie implements ServicePartieInterface
     {
         try {
             $this->partieRepository->closePartie($id);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
+
+    public function getEmailByPartieId(string $userId): string
+    {
+        try{
+            $email = $this->authRepository->getEmailByUserId($userId);
+            return $email;
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
+
+    public function setPartieImage(array $images, string $partie_id):array
+    {
+        try{
+            $partieImages = $this->partieRepository->setPartieImage($images, $partie_id);
+            return $partieImages;
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePartieInvalidDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePartieInternalServerError($e->getMessage());
+        }
+    }
+
+    public function setUserId(string $id, string $user_id):void
+    {
+        try{
+            $this->partieRepository->setUserId($id, $user_id);
         } catch (RepositoryEntityNotFoundException $e) {
             throw new ServicePartieInvalidDataException($e->getMessage());
         } catch (RepositoryInternalServerError $e) {
