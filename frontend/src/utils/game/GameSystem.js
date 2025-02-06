@@ -1,4 +1,4 @@
-import {onUnmounted} from "vue";
+import {getCurrentInstance, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
 
@@ -58,14 +58,13 @@ export function calculateTimeLeft() {
   const timer = setInterval(() => {
     if (gameStore.timeLeft > 0) {
       gameStore.timeLeft--;
-    }
-    else {
+    } else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
 
       //Force routing :
-      router.push({ name: 'gamerecap' });
+      router.push({name: 'gamerecap'});
 
     }
   }, 1000);
@@ -86,7 +85,7 @@ export function refreshMapOnResize(map) {
   }
 }
 
-export function calculateTotalScore(){
+export function calculateTotalScore() {
 
   const store = useGameStore();
   let totalScore = store.totalScore;
@@ -97,13 +96,12 @@ export function calculateTotalScore(){
   store.totalScore = totalScore;
 }
 
-export function displaySerieImage(img_src){
+export function displaySerieImage(img_src) {
   const image = document.querySelector('#game_image img');
 
   if (image) {
     image.src = img_src;
-  }
-  else{
+  } else {
     //On envoi un toast avec une erreur
   }
 }
@@ -112,28 +110,52 @@ export function displaySerieImage(img_src){
 //Logique de jeu call via API :
 ///////////////////////////////////
 
-async function initGame(){
-  try{
+async function initGame() {
+  try {
     const response = await fetch('http://localhost:5000/api/game/init');
     const data = await response.json();
     return data;
-  }
-  catch(error){
+  } catch (error) {
     console.error(error);
   }
 }
 
 //Appeler les images d'une série :
-async function callSerieImages(){
-  try{
+async function callSerieImages() {
+  try {
     const response = await fetch('http://localhost:5000/api/series/images');
     const data = await response.json();
     return data;
-  }
-  catch(error){
+  } catch (error) {
     console.error(error);
   }
 }
+
+export async function signIn(email, password) {
+  try {
+    const { proxy } = getCurrentInstance();
+    const api = proxy.$api();
+
+    const response = await api.post('/signin', {email, password});
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function signUp(email, password) {
+  try {
+    const { proxy } = getCurrentInstance();
+    const api = proxy.$api();
+    const response = await api.post('/signup', {email, password});
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 
 
