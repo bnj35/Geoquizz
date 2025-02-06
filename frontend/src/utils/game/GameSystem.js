@@ -1,6 +1,7 @@
-import {onUnmounted} from "vue";
+import {getCurrentInstance, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
+import api from "@/utils/api.js";
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
@@ -112,9 +113,44 @@ export function displaySerieImage(img_src){
 //Logique de jeu call via API :
 ///////////////////////////////////
 
-async function initGame(){
+//Appeler les images d'une série :
+
+//Parties :
+export function createParty() {
+  const instance = getCurrentInstance();
+
+  if (!instance) {
+    console.error("⚠️ Erreur : getCurrentInstance() doit être utilisé dans un composant Vue.");
+    return;
+  }
+
+  const api = instance.appContext.config.globalProperties.$api(); // ✅ Récupération de l'instance Axios
+
+  if (!api) {
+    console.error("❌ Erreur : l'instance API n'a pas été trouvée !");
+    return;
+  }
+
+  api.post('/party', {
+    nom: "partide3dede",
+    token: "tdededeocjjddefvfvkefkken3",
+    nb_photos: 3,
+    score: 10,
+    theme: "Nancy",
+    temps: 10
+  })
+    .then(response => {
+      console.log('✅ Party created:', response.data);
+    })
+    .catch(error => {
+      console.error('❌ Error creating party:', error.message);
+    });
+}
+
+
+async function getParties(){
   try{
-    const response = await fetch('http://localhost:5000/api/game/init');
+    const response = await fetch('http://localhost:5000/api/party');
     const data = await response.json();
     return data;
   }
@@ -123,7 +159,50 @@ async function initGame(){
   }
 }
 
-//Appeler les images d'une série :
+async function getPartyById(id){
+  try{
+    const response = await fetch(`http://localhost:5000/api/party/${id}`);
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+async function getPartiesByUserId(id){
+  try{
+    const response = await fetch(`http://localhost:5000/api/party/user/${id}`);
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+async function updateParty(id, data){
+  try{
+    const response = await fetch(`http://localhost:5000/api/party/${id}`)
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
+async function updatePartyScore(party_id){
+  try{
+    const response = await fetch(`http://localhost:5000/api/party/${party_id}/score`);
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error(error);
+  }
+}
+
 async function callSerieImages(){
   try{
     const response = await fetch('http://localhost:5000/api/series/images');
@@ -134,6 +213,11 @@ async function callSerieImages(){
     console.error(error);
   }
 }
+
+//Stats :
+
+
+
 
 
 
