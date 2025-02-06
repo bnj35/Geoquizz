@@ -1,7 +1,7 @@
 <?php
 
 $MAPILLARY_ACCESS_TOKEN = "MLY|28351144127864531|e36963327cfce707cfdb4d24b49155ff";
-$DIRECTUS_ACCESS_TOKEN = "JLHucwSARB1ABvUbidPmfzMFkNgq6z9j";
+$DIRECTUS_ACCESS_TOKEN = "6leSMaZc1vi3mtxApl3KQw1iy-nIxtwW";
 $DIRECTUS_API_URL = "http://host.docker.internal:8055";
 $IMG_DIR = "images";
 

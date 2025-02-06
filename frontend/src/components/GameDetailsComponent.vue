@@ -15,7 +15,7 @@
       <p class="bg-red-400">Logo GeoQuizz</p>
       <p>Score : {{ gameStore.totalScore }}</p>
       <p>Temps restant : {{ gameStore.timeLeft }}</p>
-      <p>Serie jouée : {{ gameStore.seriePlayed }}</p>
+      <p>Serie jouée : {{ gameStore.themePlayed }}</p>
     </div>
   </div>
 </template>
