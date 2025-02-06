@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import {signIn, signUp} from "@/utils/game/GameSystem.js";
 
 const props = defineProps({
   title: {
@@ -28,16 +29,15 @@ const props = defineProps({
   }
 });
 
-const gameStore = useGameStore();
 const handleSubmit = async (event) => {
   event.preventDefault();
   const email = event.target.email.value;
   const password = event.target.password.value;
 
   if (props.title === 'Sign In') {
-    await gameStore.signin(email, password);
+    await signIn(email, password);
   } else {
-    await gameStore.signup(email, password);
+    await signUp(email, password);
   }
 };
 

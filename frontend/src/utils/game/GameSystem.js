@@ -1,7 +1,7 @@
 import {getCurrentInstance, onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
-import api from "@/utils/api.js";
+import {useAPI} from "@/utils/api.js";
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
@@ -59,14 +59,13 @@ export function calculateTimeLeft() {
   const timer = setInterval(() => {
     if (gameStore.timeLeft > 0) {
       gameStore.timeLeft--;
-    }
-    else {
+    } else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
 
       //Force routing :
-      router.push({ name: 'gamerecap' });
+      router.push({name: 'gamerecap'});
 
     }
   }, 1000);
@@ -87,7 +86,7 @@ export function refreshMapOnResize(map) {
   }
 }
 
-export function calculateTotalScore(){
+export function calculateTotalScore() {
 
   const store = useGameStore();
   let totalScore = store.totalScore;
@@ -98,13 +97,12 @@ export function calculateTotalScore(){
   store.totalScore = totalScore;
 }
 
-export function displaySerieImage(img_src){
+export function displaySerieImage(img_src) {
   const image = document.querySelector('#game_image img');
 
   if (image) {
     image.src = img_src;
-  }
-  else{
+  } else {
     //On envoi un toast avec une erreur
   }
 }
@@ -190,11 +188,48 @@ export function updateUserStats(user_stats_id){
       console.error('Error updating user stats:', error);
       throw error;
     });
+//Appeler les images d'une série :
+async function callSerieImages() {
+  try {
+    const response = await fetch('http://localhost:5000/api/series/images');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
+export async function signIn(email, password) {
+  try {
+    const api = useAPI();
 
+    const response = await api.post('/signin', {}, {
+      headers: {
+        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+      }
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
+export async function signUp(email, password) {
+  try {
+    const api = useAPI();
 
+    const response = await api.post('/signup', {}, {
+      headers: {
+        'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+      }
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
 
