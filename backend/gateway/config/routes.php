@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Slim\App;
 use geoquizz\application\actions\GatewayPlayerAction;
+use geoquizz\application\actions\GatewayAssetsAction;
 
 return function(App $app):App {
 
@@ -25,6 +26,8 @@ return function(App $app):App {
     $app->patch('/parties/{id}/score', GatewayPlayerAction::class)->setName('updateScore');
 
     $app->patch('/parties/{id}/done', GatewayPlayerAction::class)->setName('closePartie');
+
+    $app->get('/assets/{id}',GatewayAssetsAction::class)->setName('getAssets');
 
     return $app;
 };
