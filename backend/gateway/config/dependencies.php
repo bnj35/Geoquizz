@@ -2,10 +2,10 @@
 
 use Psr\Container\ContainerInterface;
 use geoquizz\application\actions\GatewayAuthAction;
-use geoquizz\core\services\auth\ServiceAuthentificationInterface;
 use geoquizz\application\middlewares\Auth;
 use GuzzleHttp\Client;
 use geoquizz\application\actions\GatewayPlayerAction;
+use geoquizz\application\actions\GatewayAssetsAction;
 
 return [
 
@@ -31,6 +31,9 @@ return [
     'auth.client' => function (ContainerInterface $c) {
         return new Client(['base_uri' => 'http://api.auth.geoquizz/']);
     },
+    'directus.client' => function (ContainerInterface $c){
+        return new Client(['base_uri' => 'http://directus:8055/']);
+    },
 
     // Middleware
     Auth::class => function (ContainerInterface $c) {
@@ -47,6 +50,11 @@ return [
     //auth
     GatewayAuthAction::class => function (ContainerInterface $c) {
         return new GatewayAuthAction($c->get('auth.client'));
+    },
+
+    //directus
+    GatewayAssetsAction::class => function (ContainerInterface $c) {
+        return new GatewayAssetsAction($c->get('directus.client'));
     },
 
 ];
