@@ -9,12 +9,6 @@ const isClickable = computed(() => {
   return gameStore.currentLat !== null && gameStore.currentLon !== null;
 });
 
-//On clear certaines valeurs dans le store :
-gameStore.currentLat = null;
-gameStore.currentLon = null;
-gameStore.distance = null;
-gameStore.distanceKm = null;
-gameStore.hasPlayed = false;
 </script>
 
 <template>

@@ -13,6 +13,9 @@ class PartieDTO extends DTO
     protected int $nb_photos;
     protected int $score;
     protected string $theme;
+    protected int $status;
+    protected int $temps;
+    protected int $distance;
 
     public function __construct(Partie $p)
     {
@@ -22,5 +25,8 @@ class PartieDTO extends DTO
         $this->nb_photos = $p->getNbPhotos();
         $this->score = $p->getScore();
         $this->theme = $p->getTheme();
+        $this->status = $p->getStatus();
+        $this->temps = $p->getTemps();
+        $this->distance = $p->getDistance();
     }
 }

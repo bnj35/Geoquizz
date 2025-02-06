@@ -30,7 +30,7 @@ class DisplayStatAction extends AbstractAction
                 'stats' => $stats
             ];
             return JsonRenderer::render($rs, 200, $response);
-        }catch (StatsServiceNotFoundException $e) {
+        } catch (StatsServiceNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         } catch (StatsServiceInternalServerErrorException $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());

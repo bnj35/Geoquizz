@@ -14,16 +14,20 @@ class Partie extends Entity
     protected int $nb_photos;
     protected int $score;
     protected string $theme;
-    
+    protected int $status = 0;
+    protected int $temps;
+    protected int $distance = 10000;
 
 
-    public function __construct(string $nom, string $token, int $nb_photos, int $score, string $theme)
+
+    public function __construct(string $nom, string $token, int $nb_photos, int $score, string $theme, string $temps)
     {
         $this->nom = $nom;
         $this->token = $token;
         $this->nb_photos = $nb_photos;
         $this->score = $score;
         $this->theme = $theme;
+        $this->temps = $temps;
     }
 
     public function getNom(): string
@@ -49,6 +53,36 @@ class Partie extends Entity
     public function getTheme(): string
     {
         return $this->theme;
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    public function getTemps(): int
+    {
+        return $this->temps;
+    }
+
+    public function getDistance(): int
+    {
+        return $this->distance;
+    }
+
+    public function setStatut(int $statut): void
+    {
+        $this->status = $statut;
+    }
+
+    public function setTemps(int $temps): void
+    {
+        $this->temps = $temps;
+    }
+
+    public function setDistance(int $distance): void
+    {
+        $this->distance = $distance;
     }
 
     public function toDTO(): PartieDTO

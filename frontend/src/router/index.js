@@ -5,6 +5,9 @@ import GameRecapView from "../views/GameRecapView.vue";
 import SignupView from '../views/SignupView.vue'
 import SigninView from '../views/SigninView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import CreatePartieView from "../views/createPartieView.vue";
+import UserStatsView from "../views/UserStatsView.vue";
+import GameoverView from "../views/GameoverView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +18,16 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/userstats',
+      name: 'userstats',
+      component: UserStatsView,
+    },
+    {
+      path: '/createpartie',
+      name: 'createpartie',
+      component: CreatePartieView,
+    },
+    {
       path: '/game',
       name: 'game',
       component: GameView,
@@ -23,6 +36,12 @@ const router = createRouter({
       path: '/gamerecap',
       name: 'gamerecap',
       component: GameRecapView,
+    },
+    {
+      path: '/gameover',
+      name: 'gameover',
+      component: GameoverView,
+
     },
     {
       path: '/signup',

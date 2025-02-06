@@ -1,6 +1,7 @@
 import {onUnmounted} from "vue";
 import {useGameStore} from "@/stores/gameStore.js";
 import router from "@/router/index.js";
+import {useAPI} from "@/utils/api.js";
 
 export function haversineDistance(lat1, lon1, lat2, lon2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
@@ -49,24 +50,23 @@ export function calculateScore(distance, timeLeft, maxDistance) {
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
+  if(gameStore.gameState === 'game_over') return;
+
   if (gameStore.timerStarted) return;
 
   if (gameStore.timeLeft <= 0) return;
 
-  gameStore.timerStarted = true;
-
   const timer = setInterval(() => {
+    gameStore.timerStarted = true;
+
     if (gameStore.timeLeft > 0) {
       gameStore.timeLeft--;
     }
-    else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
 
-      //Force routing :
-      router.push({ name: 'gamerecap' });
-
+        router.push({name: 'gamerecap'});
     }
   }, 1000);
 }
@@ -86,7 +86,7 @@ export function refreshMapOnResize(map) {
   }
 }
 
-export function calculateTotalScore(){
+export function calculateTotalScore() {
 
   const store = useGameStore();
   let totalScore = store.totalScore;
@@ -97,43 +97,160 @@ export function calculateTotalScore(){
   store.totalScore = totalScore;
 }
 
-export function displaySerieImage(img_src){
+export function callRandomThemeImage() {
+  const gameStore = useGameStore();
+
+  if (gameStore.images.length === 0) return null; // Vérification si le tableau est vide
+
+  const randomIndex = Math.floor(Math.random() * gameStore.images.length);
+
+  const [randomImage] = gameStore.images.splice(randomIndex, 1);
+
+  //On renseigne les store avec les valeurs actuelles :
+  gameStore.actualLat = randomImage.latitude;
+  gameStore.actualLon = randomImage.longitude;
+
+  return randomImage.image;
+}
+
+export function displayImage(img_src) {
+  const gameStore = useGameStore();
   const image = document.querySelector('#game_image img');
 
-  if (image) {
-    image.src = img_src;
+  //On vérifie si il y a gameover :
+  if(gameStore.imagesLeft === 0){
+    gameStore.gameState = 'game_over';
+    gameStore.timerStarted = false;
+    router.push({name: 'gameover'});
   }
-  else{
+
+  if (image) {
+    image.src = `http://localhost:6081` + img_src;
+    gameStore.imagesLeft--;
+  } else {
     //On envoi un toast avec une erreur
   }
 }
+
 
 ///////////////////////////////////
 //Logique de jeu call via API :
 ///////////////////////////////////
 
-async function initGame(){
-  try{
-    const response = await fetch('http://localhost:5000/api/game/init');
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
+//Créer une partie :
+export function createParty(name, token, theme, nb_photos, time, user_id) {
+  const api = useAPI();
+
+  return api.post('/parties', {
+    nom: name,
+    token: token,
+    nb_photos: nb_photos,
+    score: 0,
+    theme: theme,
+    temps: time,
+    user_id: user_id,
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error creating party:', error);
+      throw error;
+    });
+}
+
+
+
+//Parties :
+//OK
+export function getParties() {
+  const api = useAPI();
+
+  return api.get('/parties')
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching parties:', error);
+      throw error;
+    });
+}
+
+//OK
+export function getPartiesByUserId(id){
+  const api = useAPI();
+
+  return api.get(`/users/${id}/parties`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching parties:', error);
+      throw error;
+    });
+}
+
+//OK
+export function getUserStats(id){
+  const api = useAPI();
+
+  return api.get(`/users/${id}/stats`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching user stats:', error);
+      throw error;
+  });
+}
+
+export function updateUserStats(user_stats_id) {
+  const api = useAPI();
+
+  return api.put(`/stats/${user_stats_id}`, {
+    score_total: 0,
+    score_moyen: 0,
+    nb_parties: 0,
+    meilleur_coup: 0,
+    pire_coup: 0
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error updating user stats:', error);
+      throw error;
+    });
 }
 
 //Appeler les images d'une série :
-async function callSerieImages(){
-  try{
-    const response = await fetch('http://localhost:5000/api/series/images');
-    const data = await response.json();
-    return data;
+  async function callThemeImages() {
+    const gameStore = useGameStore();
+
+
   }
-  catch(error){
-    console.error(error);
+
+  export async function signIn(email, password) {
+    try {
+      const api = useAPI();
+
+      const response = await api.post('/signin', {}, {
+        headers: {
+          'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
+
+  export async function signUp(email, password) {
+    try {
+      const api = useAPI();
+
+      const response = await api.post('/signup', {}, {
+        headers: {
+          'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
 

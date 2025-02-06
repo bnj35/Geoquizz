@@ -12,7 +12,15 @@ interface PartieRepositoryInterface
 
     public function getPartieById(string $id): Partie;
 
-    public function getPartiesByEmail(string $email): array;
-
     public function getPartieByUserId(string $user_id): array;
+
+    public function updateScore(string $id, int $score): void;
+
+    public function closePartie(string $id):void;
+
+    public function setPartieImage(array $images, string $partie_id):array;
+
+    public function setUserId(string $id, string $user_id):void;
+
+    public function getUserIdByPartieId(string $id): string;
 }

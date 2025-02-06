@@ -22,7 +22,7 @@ class DisplayStatsAction extends AbstractAction
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
-        try{
+        try {
             $stats = $this->serviceStatsInterface->getAllStats();
 
             $response = [

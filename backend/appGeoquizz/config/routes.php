@@ -1,16 +1,18 @@
 <?php
 declare(strict_types=1);
 
-
 use geoquizz\application\actions\CreateStatAction;
 use geoquizz\application\actions\DisplayStatAction;
 use geoquizz\application\actions\DisplayStatsAction;
+use geoquizz\application\actions\DisplayStatsByUserIdAction;
 use geoquizz\application\actions\UpdateStatAction;
 use geoquizz\application\actions\CreatePartieAction;
 use geoquizz\application\actions\GetPartiesAction;
 use geoquizz\application\actions\GetPartieByIdAction;
 use geoquizz\application\actions\GetPartiesByUserAction;
 use geoquizz\application\actions\UpdateScoreAction;
+use geoquizz\application\actions\ClosePartieAction;
+
 
 return function(\Slim\App $app):\Slim\App {
 
@@ -28,6 +30,10 @@ return function(\Slim\App $app):\Slim\App {
     $app->get('/users/{id}/parties', GetPartiesByUserAction::class)->setName('getPartiesByUser');
 
     $app->patch('/parties/{id}/score', UpdateScoreAction::class)->setName('updateScore');
+
+    $app->patch('/parties/{id}/done', ClosePartieAction::class)->setName('closePartie');
+
+    $app->get('/users/{id}/stats', DisplayStatsByUserIdAction::class);
 
     return $app;
 };
