@@ -11,8 +11,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 
-class DisplayStatAction extends AbstractAction
+class DisplayStatsByUserIdAction extends AbstractAction
 {
+
     private StatsServiceInterface $serviceStatsInterface;
 
     public function __construct(StatsServiceInterface $serviceStatsInterface)
@@ -22,8 +23,8 @@ class DisplayStatAction extends AbstractAction
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface
     {
-        try{
-            $stats = $this->serviceStatsInterface->getStats($args['id']);
+        try {
+            $stats = $this->serviceStatsInterface->getStatsByPlayer($args['id']);
             $response = [
                 'type' => 'collection',
                 'locale' => 'fr-FR',

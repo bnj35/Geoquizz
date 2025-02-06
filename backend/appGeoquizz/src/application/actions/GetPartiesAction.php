@@ -65,7 +65,7 @@ class GetPartiesAction extends AbstractAction
 
         } catch (ServicePartieInternalServerError $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
-        }catch (ServicePartieInvalidDataException $e){
+        } catch (ServicePartieInvalidDataException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
