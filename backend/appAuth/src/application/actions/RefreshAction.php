@@ -2,6 +2,7 @@
 
 namespace geoquizz\application\actions;
 
+use geoquizz\application\provider\auth\AuthProviderInterface;
 use geoquizz\application\renderer\JsonRenderer;
 use geoquizz\core\services\auth\AuthentificationServiceInternalServerErrorException;
 use Psr\Http\Message\ResponseInterface;
