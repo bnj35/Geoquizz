@@ -115,48 +115,19 @@ export function displaySerieImage(img_src){
 
 //Appeler les images d'une série :
 
+
 //Parties :
-export function createParty() {
-  const instance = getCurrentInstance();
+//OK
+export function getParties() {
+  const { proxy } = getCurrentInstance();
+  const api = proxy.$api(); // Call the function to get the axios instance
 
-  if (!instance) {
-    console.error("⚠️ Erreur : getCurrentInstance() doit être utilisé dans un composant Vue.");
-    return;
-  }
-
-  const api = instance.appContext.config.globalProperties.$api(); // ✅ Récupération de l'instance Axios
-  console.log(api)
-  if (!api) {
-    console.error("❌ Erreur : l'instance API n'a pas été trouvée !");
-    return;
-  }
-
-  api.post('/parties', {
-    nom: "partide3dede",
-    token: "tdededeocjjddefvfvkefkken3",
-    nb_photos: 3,
-    score: 10,
-    theme: "Nancy",
-    temps: 10
-  })
-    .then(response => {
-      console.log('✅ Party created:', response.data);
-    })
+  return api.get('/parties')
+    .then(response => response.data)
     .catch(error => {
-      console.error('❌ Error creating party:', error.message);
+      console.error('Error fetching parties:', error);
+      throw error;
     });
-}
-
-
-async function getParties(){
-  try{
-    const response = await fetch('http://localhost:5000/api/party');
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
 }
 
 async function getPartyById(id){
@@ -170,15 +141,17 @@ async function getPartyById(id){
   }
 }
 
-async function getPartiesByUserId(id){
-  try{
-    const response = await fetch(`http://localhost:5000/api/party/user/${id}`);
-    const data = await response.json();
-    return data;
-  }
-  catch(error){
-    console.error(error);
-  }
+//OK
+export function getPartiesByUserId(id){
+  const { proxy } = getCurrentInstance();
+  const api = proxy.$api(); // Call the function to get the axios instance
+
+  return api.get(`/users/${id}/parties`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching parties:', error);
+      throw error;
+    });
 }
 
 async function updateParty(id, data){
