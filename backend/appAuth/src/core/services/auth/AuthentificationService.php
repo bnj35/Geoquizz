@@ -24,18 +24,26 @@ class AuthentificationService implements AuthentificationServiceInterface
 
     public function register(CredentialsDTO $credentials, int $role): string
     {
-        $user = $this->authRepository->getUserByEmail($credentials->email);
-        if ($user !== null) {
-            throw new AuthentificationServiceBadDataException("User already exists");
+        try{
+            $user = $this->authRepository->getUserByEmail($credentials->email);
+            if ($user !== null) {
+                throw new AuthentificationServiceBadDataException("User already exists");
+            }
+        }catch (RepositoryEntityNotFoundException $e) {
+            // User not found, we can continue
         }
         try{
             $pass = password_hash($credentials->password, PASSWORD_DEFAULT);
             $user = new User($credentials->email, $pass, $role);
+            $user_id = $this->authRepository->save($user);
+            $user->setID($user_id);
             $input = new InputStatsDTO($user->getID(), 0, 0, 0, 0, 0);
             $this->statsService->createStats($input);
-            return $this->authRepository->save($user);
+            return $user_id;
         }catch (RepositoryInternalServerError $e){
-            throw new AuthentificationServiceInternalServerErrorException("Error while registering user");
+            throw new AuthentificationServiceInternalServerErrorException($e->getMessage());
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new AuthentificationServiceNotFoundException($e->getMessage());
         }
     }
 

@@ -17,6 +17,7 @@ use Slim\Exception\HttpNotFoundException;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
+
 //renderer
 use geoquizz\application\renderer\JsonRenderer;
 
@@ -48,7 +49,6 @@ class ClosePartieAction extends AbstractAction
                     ]
                 ]
             ];
-
             //message queue
             if ($email != null) {
                 $connection = new AMQPStreamConnection('rabbitmq', 5672, 'admin', 'admin');
@@ -81,4 +81,5 @@ class ClosePartieAction extends AbstractAction
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
+
 }
