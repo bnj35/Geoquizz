@@ -28,15 +28,15 @@ class Auth implements MiddlewareInterface
         }
 
         try {
-            $response = $this->client->request('GET', '/validate', [
+            $response = $this->client->request('POST', '/validate', [
                 'headers' => ['Authorization' => $token]
             ]);
 
-            if ($response->getStatusCode() !== 200) {
+            if ($response->getStatusCode() !== 204) {
                 throw new HttpUnauthorizedException($request, 'Invalid token');
             }
         } catch (ClientException $e) {
-            throw new HttpUnauthorizedException($request, 'Invalid token');
+            throw new HttpUnauthorizedException($request, $e->getMessage());
         }
 
         return $handler->handle($request);

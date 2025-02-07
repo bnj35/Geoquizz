@@ -12,6 +12,7 @@
 
   onMounted(() => {
     gameStore.gameState = 'playing';
+    gameStore.timeLeft = gameStore.time;
     calculateTimeLeft(gameStore.timeLeft)
   });
 </script>

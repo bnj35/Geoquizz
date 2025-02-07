@@ -15,8 +15,8 @@ const isClickable = computed(() => {
   <div
     class="absolute bg-gray-800 text-gray-50 px-16 text-2xl rounded-3xl py-4 left-1/2 bottom-8 -translate-x-1/2 cursor-pointer transition-opacity duration-300"
     id="ConfirmButton"
-    :class="{ 'opacity-20': !isClickable }"
-  >
+    :class="{ 'opacity-20': !isClickable }">
+
     <router-link
       v-if="isClickable"
       @click="calculateScore(gameStore.distance, gameStore.timeLeft, gameStore.maxDistance)"

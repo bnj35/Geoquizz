@@ -18,7 +18,7 @@ const time = ref();
 
 const themes = ref([]);
 
-const themesPartie = async () => { 
+const themesPartie = async () => {
   try {
     const response = await getThemes();
     if (response) {
@@ -32,7 +32,7 @@ const themesPartie = async () => {
 
 const handleSubmit = async () => {
   try {
-    const response = await createParty(name.value, 'nrgciiibhffdghghfgddfggtghgfdgdfgfdgfddgfgfdthfgdgfdyghyjhgdgfgfdnfgdggtfgdgfdghrffgdgfdggdgflolioilyhj', theme.value, nb_photos.value, time.value, userStore.user_id);
+    const response = await createParty(name.value, theme.value, nb_photos.value, time.value, userStore.user_id);
     if (response) {
       console.log(response)
 
@@ -40,6 +40,7 @@ const handleSubmit = async () => {
       gameStore.maxDistance = response.partie.distance;
       gameStore.themePlayed = response.partie.theme;
       gameStore.gameId = response.partie.id;
+      gameStore.time = response.partie.temps;
       gameStore.timeLeft = response.partie.temps;
       gameStore.nbPhotos = response.partie.nb_photos;
       gameStore.gameName = response.partie.nom;
