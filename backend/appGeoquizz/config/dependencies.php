@@ -20,6 +20,9 @@ use geoquizz\application\actions\CreateStatAction;
 use geoquizz\application\actions\GetPartiesAction;
 use geoquizz\application\actions\GetPartieByIdAction;
 use geoquizz\application\actions\GetPartiesByUserAction;
+use geoquizz\application\actions\ClosePartieAction;
+use geoquizz\core\repositoryInterfaces\RepositoryAuthInterface;
+use geoquizz\infrastructure\db\AuthRepositoryPDO;
 use GuzzleHttp\Client;
 
 return [
@@ -46,6 +49,13 @@ return [
         return $pdo_partie;
     },
 
+    'pdo_users' => function (ContainerInterface $c) {
+        $data = parse_ini_file(__DIR__ . '/users.ini');
+        $pdo_users = new PDO('pgsql:host=' . $data['host'] . ';dbname=' . $data['dbname'], $data['username'], $data['password']);
+        $pdo_users->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_users;
+    },
+
     //client directus
     'directus.client' => function (ContainerInterface $c) {
         return new Client([
@@ -65,6 +75,11 @@ return [
     PartieRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOPartieRepository($c->get('pdo_partie'));
     },
+
+    RepositoryAuthInterface::class => function (ContainerInterface $c) {
+        return new AuthRepositoryPDO($c->get('pdo_users'));
+    },
+
     StatsServiceInterface::class => function (ContainerInterface $c) {
         return new StatsService($c->get(StatsRepositoryInterface::class));
     },
@@ -72,7 +87,8 @@ return [
     // Services
     ServicePartieInterface::class => function (ContainerInterface $c) {
         return new ServicePartie(
-            $c->get(PartieRepositoryInterface::class)
+            $c->get(PartieRepositoryInterface::class),
+            $c->get(RepositoryAuthInterface::class)
         );
     },
 
@@ -126,6 +142,12 @@ return [
 
     UpdateScoreAction::class => function (ContainerInterface $c) {
         return new UpdateScoreAction(
+            $c->get(ServicePartieInterface::class)
+        );
+    },
+
+    ClosePartieAction::class => function (ContainerInterface $c){
+        return new ClosePartieAction(
             $c->get(ServicePartieInterface::class)
         );
     }

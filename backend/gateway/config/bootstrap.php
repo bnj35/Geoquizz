@@ -16,13 +16,13 @@ $app = AppFactory::createFromContainer($c);
 
 
 $app->addBodyParsingMiddleware();
-$app->add(Cors::class);
+
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware($c->get('displayErrorDetails'), false, false)
 ->getDefaultErrorHandler()
 ->forceContentType('application/json')
 ;
-
+$app->add(Cors::class);
 
 $app = (require_once __DIR__ . '/routes.php')($app);
 $routeParser = $app->getRouteCollector()->getRouteParser();

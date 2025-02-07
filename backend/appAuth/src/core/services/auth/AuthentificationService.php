@@ -5,17 +5,21 @@ namespace geoquizz\core\services\auth;
 use geoquizz\core\domain\entities\user\User;
 use geoquizz\core\dto\auth\AuthDTO;
 use geoquizz\core\dto\auth\CredentialsDTO;
+use geoquizz\core\dto\stats\InputStatsDTO;
 use geoquizz\core\repositoryInterfaces\AuthRepositoryInterface;
 use geoquizz\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use geoquizz\core\repositoryInterfaces\RepositoryInternalServerError;
+use geoquizz\core\services\stats\StatsServiceInterface;
 
 class AuthentificationService implements AuthentificationServiceInterface
 {
     private AuthRepositoryInterface $authRepository;
+    private StatsServiceInterface $statsService;
 
-    public function __construct(AuthRepositoryInterface $authRepository)
+    public function __construct(AuthRepositoryInterface $authRepository, StatsServiceInterface $statsService)
     {
         $this->authRepository = $authRepository;
+        $this->statsService = $statsService;
     }
 
     public function register(CredentialsDTO $credentials, int $role): string
@@ -26,14 +30,20 @@ class AuthentificationService implements AuthentificationServiceInterface
                 throw new AuthentificationServiceBadDataException("User already exists");
             }
         }catch (RepositoryEntityNotFoundException $e) {
-            // User not found, we can register
+            // User not found, we can continue
         }
         try{
             $pass = password_hash($credentials->password, PASSWORD_DEFAULT);
             $user = new User($credentials->email, $pass, $role);
-            return $this->authRepository->save($user);
+            $user_id = $this->authRepository->save($user);
+            $user->setID($user_id);
+            $input = new InputStatsDTO($user->getID(), 0, 0, 0, 0, 0);
+            $this->statsService->createStats($input);
+            return $user_id;
         }catch (RepositoryInternalServerError $e){
-            throw new AuthentificationServiceInternalServerErrorException("Error while registering user");
+            throw new AuthentificationServiceInternalServerErrorException($e->getMessage());
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new AuthentificationServiceNotFoundException($e->getMessage());
         }
     }
 
@@ -73,6 +83,20 @@ class AuthentificationService implements AuthentificationServiceInterface
     {
         try{
             $user = $this->authRepository->getUserById($id);
+            if ($user === null) {
+                throw new AuthentificationServiceBadDataException("User not found");
+            }
+            return new AuthDTO($user->getID(), $user->getEmail(), $user->getRole());
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new AuthentificationServiceBadDataException("User not found");
+        }catch (RepositoryInternalServerError $e){
+            throw new AuthentificationServiceInternalServerErrorException("Error while fetching user");
+        }
+    }
+
+    public function getUserByEmail(string $email): AuthDTO {
+        try{
+            $user = $this->authRepository->getUserByEmail($email);
             if ($user === null) {
                 throw new AuthentificationServiceBadDataException("User not found");
             }

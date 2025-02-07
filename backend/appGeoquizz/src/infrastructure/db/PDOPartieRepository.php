@@ -98,26 +98,6 @@ class PDOPartieRepository implements PartieRepositoryInterface
         }
     }
 
-    public function getPartiesByEmail(string $email): array
-    {
-        try {
-            $stmt = $this->pdo->prepare("SELECT * FROM parties WHERE email = :email");
-            $stmt->execute(['email' => $email]);
-            $parties = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            $result = [];
-            foreach ($parties as $partie) {
-                $p = new Partie($partie['nom'], $partie['token'], (int)$partie['nb_photos'], (int)$partie['score'], $partie['theme'], $partie['temps']);
-                $p->setID($partie['id']);
-                $p->setStatut($partie['status']);
-                $p->setDistance($partie['distance']);
-                $result[] = $p;
-            }
-            return $result;
-        } catch (\PDOException $e) {
-            throw new RepositoryInternalServerError("Error while fetching parties");
-        }
-    }
-
     public function getPartieByUserId(string $user_id): array
     {
         try {
@@ -156,6 +136,60 @@ class PDOPartieRepository implements PartieRepositoryInterface
             }
         } catch (\PDOException $e) {
             throw new RepositoryInternalServerError("Error while updating partie");
+        }
+    }
+
+    public function closePartie(string $id):void
+    {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE parties SET status = 1 WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("Partie not found");
+            }
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
+        }
+    }
+
+    public function getUserIdByPartieId(string $id): string 
+    {
+        try{
+            $stmt = $this->pdo->prepare("SELECT user_id FROM partie_users WHERE partie_id = :id");
+            $stmt->execute(['id' => $id]);
+            $userId = $stmt->fetchColumn();
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("user id not found");
+            }
+            return $userId;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
+        }
+    }
+
+    public function setPartieImage(array $images, string $partie_id):array
+    {
+        try{
+            $values = [];
+            for($i=0; $i<count($images); $i++){
+                $values[] = "('$partie_id', '{$images[$i]['id']}')";
+            }
+            $values = implode(", ", $values);
+            $stmt = $this->pdo->prepare("INSERT INTO partie_images (partie_id, image_id) VALUES $values");
+            $stmt->execute();
+            return $images;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
+        }
+    } 
+
+    public function setUserId(string $id, string $user_id):void
+    {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO partie_users (partie_id, user_id) VALUES (:id, :user_id)");
+            $stmt->execute(['id' => $id, 'user_id' => $user_id]);
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError($e->getMessage());
         }
     }
 }

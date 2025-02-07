@@ -6,6 +6,7 @@ use geoquizz\application\provider\auth\AuthProviderInterface;
 use geoquizz\application\renderer\JsonRenderer;
 use geoquizz\core\dto\auth\CredentialsDTO;
 use geoquizz\core\services\auth\AuthentificationServiceBadDataException;
+use geoquizz\core\services\auth\AuthentificationServiceInterface;
 use geoquizz\core\services\auth\AuthentificationServiceInternalServerErrorException;
 use geoquizz\core\services\auth\AuthentificationServiceNotFoundException;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +23,7 @@ class SignupAction extends AbstractAction
 {
     private AuthProviderInterface $authnProviderInterface;
 
-    public function __construct(AuthProviderInterface $authnProviderInterface){
+    public function __construct(AuthProviderInterface $authnProviderInterface,){
         $this->authnProviderInterface = $authnProviderInterface;
     }
 
@@ -34,30 +35,30 @@ class SignupAction extends AbstractAction
 
         $decodedAuth = base64_decode($authHeader);
         list($email, $password) = explode(':', $decodedAuth, 2);
-        //message queue
-if ($email != null) {
-    $connection = new AMQPStreamConnection('rabbitmq', 5672, 'admin', 'admin');
-    $channel = $connection->channel();
-    $channel->exchange_declare('notification_exchange', 'direct', false, true, false);
-    $channel->queue_declare('notification_queue', false, true, false, false, false);
-    $channel->queue_bind('notification_queue', 'notification_exchange');
-    $user = explode('@', $email)[0];
-    
-    $messageData = [
-        'event' => 'CREATE',
-        'recipient' => [
-            'email' => $email,
-            'name' => $user
-        ],
-        'details' => " Welcome to GeoQuizz, $user! You have successfully created an account."
-    ];
-    
-    $msg = new AMQPMessage(json_encode($messageData), ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
-    $channel->basic_publish($msg, 'notification_exchange');
-    
-    $channel->close();
-    $connection->close();
-    };
+
+        if ($email != null) {
+            $connection = new AMQPStreamConnection('rabbitmq', 5672, 'admin', 'admin');
+            $channel = $connection->channel();
+            $channel->exchange_declare('notification_exchange', 'direct', false, true, false);
+            $channel->queue_declare('notification_queue', false, true, false, false, false);
+            $channel->queue_bind('notification_queue', 'notification_exchange');
+            $user = explode('@', $email)[0];
+
+            $messageData = [
+                'event' => 'CREATE',
+                'recipient' => [
+                    'email' => $email,
+                    'name' => $user
+                ],
+                'details' => " Welcome to GeoQuizz, $user! You have successfully created an account."
+            ];
+
+            $msg = new AMQPMessage(json_encode($messageData), ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+            $channel->basic_publish($msg, 'notification_exchange');
+
+            $channel->close();
+            $connection->close();
+        }
 
         try {
             $this->authnProviderInterface->register(new CredentialsDTO($email, $password));

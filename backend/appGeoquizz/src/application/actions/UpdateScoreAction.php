@@ -44,7 +44,7 @@ class UpdateScoreAction extends AbstractAction
             $score = $data['score'];
 
             $scoreInputValidator = Validator::key('score', Validator::intType()->notEmpty());
-            try{
+            try {
                 $scoreInputValidator->assert($data);
                 if (!filter_var($data["score"], FILTER_VALIDATE_INT)) {
                     throw new HttpBadRequestException($rq, "Bad data format score");

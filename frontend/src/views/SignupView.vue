@@ -5,23 +5,14 @@ import Navbar from "@/components/NavbarComponent.vue";
 
 <template>
   <Navbar />
-  <div>
+  <div class="flex justify-center items-center h-screen">
     <FormComponent
-      title="Sign Up"
-      emailPlaceholder="Enter your email"
-      passwordPlaceholder="Create a password"
-      buttonText="Sign Up"
-      textLink="Already have an account?"
-      paragraphe="Sign In"
+      title="S'inscrire"
+      emailPlaceholder="Entrez votre adresse e-mail"
+      passwordPlaceholder="Entrez votre mot de passe"
+      buttonText="S'inscrire"
+      textLink="Vous avez déjà un compte ?"
+      paragraphe="Se connecter"
     />
   </div>
 </template>
-
-<style scoped>
-div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-</style>
