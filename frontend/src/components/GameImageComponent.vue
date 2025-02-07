@@ -1,9 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import {displaySerieImage} from "@/utils/game/GameSystem.js";
+import {callRandomThemeImage, displayImage} from "@/utils/game/GameSystem.js";
 
 onMounted(() => {
-  displaySerieImage('./src/assets/img/4.jpg');
+  displayImage(callRandomThemeImage());
 });
 
 </script>

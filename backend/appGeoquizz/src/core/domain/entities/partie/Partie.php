@@ -16,7 +16,7 @@ class Partie extends Entity
     protected string $theme;
     protected int $status = 0;
     protected int $temps;
-    protected int $distance = 100;
+    protected int $distance = 10000;
 
 
 

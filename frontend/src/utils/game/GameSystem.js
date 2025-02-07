@@ -39,20 +39,28 @@ export function calculateScore(distance, timeLeft, maxDistance) {
 
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
-  if (gameStore.timerStarted || gameStore.timeLeft <= 0) return;
 
-  gameStore.timerStarted = true;
+
+  if(gameStore.gameState === 'game_over') return;
+
+  if (gameStore.timerStarted) return;
+
+  if (gameStore.timeLeft <= 0) return;
+
   const timer = setInterval(() => {
+    gameStore.timerStarted = true;
+
     if (gameStore.timeLeft > 0) {
       gameStore.timeLeft--;
-    } else {
+    }
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
-      router.push({ name: 'gamerecap' });
+        router.push({name: 'gamerecap'});
     }
-  }, 1000);
+  , 1000);
 }
+
 
 export function refreshMapOnResize(map) {
   const mapElement = document.getElementById('game_map');
@@ -70,8 +78,60 @@ export function calculateTotalScore() {
   store.totalScore += store.scores.reduce((acc, score) => acc + score, 0);
 }
 
-export function displaySerieImage(img_src) {
+export function callRandomThemeImage() {
+  const gameStore = useGameStore();
+
+  if (gameStore.images.length === 0) return null; // Vérification si le tableau est vide
+
+  const randomIndex = Math.floor(Math.random() * gameStore.images.length);
+
+  const [randomImage] = gameStore.images.splice(randomIndex, 1);
+
+  //On renseigne les store avec les valeurs actuelles :
+  gameStore.actualLat = randomImage.latitude;
+  gameStore.actualLon = randomImage.longitude;
+
+  return randomImage.image;
+}
+
+export function displayImage(img_src) {
+  const gameStore = useGameStore();
   const image = document.querySelector('#game_image img');
+
+  //On vérifie si il y a gameover :
+  if(gameStore.imagesLeft === 0){
+    gameStore.gameState = 'game_over';
+    gameStore.timerStarted = false;
+    router.push({name: 'gameover'});
+  }
+
+  if (image) {
+    image.src = `http://localhost:6081` + img_src;
+    gameStore.imagesLeft--;
+  } else {
+    //On envoi un toast avec une erreur
+  }
+}
+
+
+///////////////////////////////////
+//Logique de jeu call via API :
+///////////////////////////////////
+
+//Créer une partie :
+export function createParty(name, token, theme, nb_photos, time, user_id) {
+  const api = useAPI();
+
+  return api.post('/parties', {
+    nom: name,
+    token: token,
+    nb_photos: nb_photos,
+    score: 0,
+    theme: theme,
+    temps: time,
+    user_id: user_id,
+  })
+=======
   if (image) {
     image.src = img_src;
   }
@@ -91,6 +151,10 @@ export function createParty(name, token, theme, nb_photos, time, user_id) {
     .catch(error => { console.error('Error creating party:', error); throw error; });
 }
 
+
+
+//Parties :
+//OK
 export function getParties() {
   const api = useAPI();
   return api.get('/parties')
@@ -120,6 +184,13 @@ export function updateUserStats(user_stats_id) {
     .then(response => response.data)
     .catch(error => { console.error('Error updating user stats:', error); throw error; });
 }
+
+
+//Appeler les images d'une série :
+  async function callThemeImages() {
+    const gameStore = useGameStore();
+
+
 
 export async function signIn(email, password) {
   try {
