@@ -6,7 +6,7 @@ import HeroSection from "@/components/HeroComponent.vue";
 
 <template>
   <div class="bg-red-400 h-screen">
-    <Navbar/>
+    <Navbar />
     <HeroSection/>
   </div>
 </template>
