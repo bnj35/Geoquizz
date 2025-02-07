@@ -2,33 +2,30 @@ import { defineStore } from 'pinia'
 
 export const useGameStore = defineStore('game', {
   state: () => ({
-    gameState: 'playing',
+    gameId: null,
+    gameName: null,
+    gameState: null,
     currentLat: null,
     currentLon: null,
     actualLat: '48.6899712',
     actualLon: '6.1820983',
 
-    distance: 0,
-    distanceKm: 0,
+    distance: null,
+    distanceKm: null,
 
-    maxDistance: 10000, //GAME INIT
+    maxDistance: null, //GAME INIT
 
     score: 0,
     scores: [], // NE PAS PERSISTE
     totalScore: 0, // DOIT PERSISTE
 
-    timeLeft: 300000, //GAME INIT
+    timeLeft: 0, //GAME INIT
     timerStarted: false, //GAME INIT
 
-    images: ['../assets/images/1.jpg', '../assets/images/2.jpg', '../assets/images/3.jpg', '../assets/images/4.jpg'],
-    imagesPlayed: [],
-    imagesLeft: 10, //GAME INIT
-    imageLat: '48.6899712',
-    imageLon: '6.1820983',
+    images: [],
+    imagesLeft: 0, //GAME INIT
 
-    seriePlayed: 'Nancy et ses environs',
-    serieLat: '48.6899712',
-    serieLon: '6.1820983',
+    themePlayed: 'Nancy et ses environs',
 
     defaultLat: '48.866667',
     defaultLon: '2.333333',

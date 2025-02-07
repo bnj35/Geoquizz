@@ -5,6 +5,7 @@ namespace geoquizz\application\actions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Exception\HttpUnauthorizedException;
@@ -47,6 +48,7 @@ class GatewayPlayerAction extends GatewayAbstractAction
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
         } catch (ClientException $e) {
             match($e->getCode()) {
+                400 => throw new HttpBadRequestException($rq, $e->getMessage()),
                 401 => throw new HttpUnauthorizedException($rq, $e->getMessage()),
                 403 => throw new HttpForbiddenException($rq, $e->getMessage()),
                 404 => throw new HttpNotFoundException($rq, $e->getMessage()),

@@ -44,8 +44,9 @@ onMounted(() => {
   })
 
   refreshMapOnResize(map)
-  calculateTotalScore();
-  calculateTimeLeft(gameStore.timeLeft)
+  calculateTotalScore(); //Devrait pas etre là
+  calculateTimeLeft(gameStore.timeLeft) //Devrait pas etre là
+
 })
 
 </script>
