@@ -18,7 +18,7 @@ const time = ref();
 
 const themes = ref([]);
 
-const themesPartie = async () => { 
+const themesPartie = async () => {
   try {
     const response = await getThemes();
     if (response) {
@@ -32,7 +32,7 @@ const themesPartie = async () => {
 
 const handleSubmit = async () => {
   try {
-    const response = await createParty(name.value, 'nrgciiibhffdghghfgddfggtghgfdgdfgfdgfddgfgfdthfgdgfdyghyjhgdgfgfdnfgdggtfgdgfdghrffgdgfdggdgflolioilyhj', theme.value, nb_photos.value, time.value, userStore.user_id);
+    const response = await createParty(name.value, theme.value, nb_photos.value, time.value, userStore.user_id);
     if (response) {
       console.log(response)
 
@@ -40,6 +40,7 @@ const handleSubmit = async () => {
       gameStore.maxDistance = response.partie.distance;
       gameStore.themePlayed = response.partie.theme;
       gameStore.gameId = response.partie.id;
+      gameStore.time = response.partie.temps;
       gameStore.timeLeft = response.partie.temps;
       gameStore.nbPhotos = response.partie.nb_photos;
       gameStore.gameName = response.partie.nom;
@@ -85,7 +86,7 @@ onMounted(() => {
         <label for="time" class="block text-sm font-medium text-gray-700">Temps (en secondes) :</label>
         <input type="number" id="time" v-model="time" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
       </div>
-      <button type="submit" class="w-full bg-gray-800 text-amber-50 py-2 px-4 rounded-md shadow-sm hover:">Jouer</button>
+      <button type="submit" class="w-full bg-gray-800 text-gray-50 py-2 px-4 rounded-md shadow-sm hover:">Jouer</button>
     </form>
   </div>
 </template>

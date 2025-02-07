@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <div class=" bg-amber-50 border-b-1 hidden md:flex items-center justify-between py-4" id="desktop_navbar">
+    <div class=" bg-gray-50 border-b-1 hidden md:flex items-center justify-between py-4" id="desktop_navbar">
       <div class="text-center basis-2/10"><router-link to="/">Home</router-link></div>
 
       <div class="flex justify-around basis-4/10" id="nav-links">
@@ -21,7 +21,7 @@
     </div>
 
 
-  <div class="md:hidden fixed bottom-0 justify-between items-center flex py-4 w-full border-t-1 z-50 bg-amber-50" id="mobile_navbar">
+  <div class="md:hidden fixed bottom-0 justify-between items-center flex py-4 w-full border-t-1 z-50 bg-gray-50" id="mobile_navbar">
     <div class="flex justify-around items-center w-full" id="nav-links">
       <router-link to="/"> <img class="w-6 h-6" src="../assets/svg/house-solid.svg" alt=""></router-link>
       <router-link to="createpartie"><img class="w-6 h-6" src="../assets/svg/gamepad-solid.svg" alt=""></router-link>

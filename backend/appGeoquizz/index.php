@@ -1,8 +1,8 @@
 <?php
 
 $MAPILLARY_ACCESS_TOKEN = "MLY|28351144127864531|e36963327cfce707cfdb4d24b49155ff";
-$DIRECTUS_ACCESS_TOKEN = "6leSMaZc1vi3mtxApl3KQw1iy-nIxtwW";
-$DIRECTUS_API_URL = "http://host.docker.internal:8055";
+$DIRECTUS_ACCESS_TOKEN = "sEdwBv9DtgpNxW20G93us6U0G1wDAds5";
+$DIRECTUS_API_URL = "http://host.docker.internal:36611";
 $IMG_DIR = "images";
 
 if (!is_dir($IMG_DIR)) {
@@ -178,7 +178,7 @@ function main()
 {
     // ! Variables
     $limit = 40;
-    $BBOX_NANCY = "-74.260381,40.554459,6.207352,48.896195";
+    $BBOX_NANCY = "6.147186,48.668404,6.205910,48.707171";
     $BBOX_PARIS = "2.227469,48.788140,2.450647,48.934965";
     $SERIE_ID_NANCY = 1;
     $SERIE_ID_PARIS = 2;
