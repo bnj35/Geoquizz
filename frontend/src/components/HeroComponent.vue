@@ -39,7 +39,6 @@ getParties().then((data) => {
             <th class="px-4 py-2 border border-gray-300">Thème</th>
             <th class="px-4 py-2 border border-gray-300">Score</th>
             <th class="px-4 py-2 border border-gray-300">Nombre de photos</th>
-            <th class="px-4 py-2 border border-gray-300">Jouer</th>
           </tr>
         </thead>
         <tbody>
@@ -63,7 +62,6 @@ getParties().then((data) => {
             <th class="px-4 py-2 border border-gray-300">Thème</th>
             <th class="px-4 py-2 border border-gray-300">Score</th>
             <th class="px-4 py-2 border border-gray-300">Nombre de photos</th>
-            <th class="px-4 py-2 border border-gray-300">Jouer</th>
           </tr>
         </thead>
         <tbody>
