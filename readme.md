@@ -38,7 +38,7 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
    
 3. Lancer les conteneurs Docker
    ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 4. Créer les collections sur directus
    - Se rendre sur http://localhost:8055
@@ -56,7 +56,7 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
      - <b>mapillary_id</b> (input de type string)
      - <b>serie</b> (relation avec la collection "series" : many to one)
      ![img_1.png](images_readme/img_1.png)<br><br>
-   - Donner toutes les autorisations à l'utilisateur "public" pour les collections "series" et "images" et "directus_files" (pour les images)
+   - Donner toutes les autorisations à l'utilisateur "public" pour les collections "series" et "images" et "directus_files" (pour les images).<br>N'oubliez pas de sauvegarder les modifications sur directus.
    ![img_2.png](images_readme/img_2.png)<br><br>
    - Générer un token d'accès pour l'utilisateur "admin" et le copier pour le mettre dans 'geoguizz.env'. Ne pas oublier de sauvegarder les 3 étapes sur directus.
    ![img_4.png](images_readme/img_4.png)<br><br>
@@ -64,13 +64,13 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
    ![img_6.png](images_readme/img_6.png)<br><br>
    - Lancer le script php avec la commande suivante (dans le service docker api.services.geoquizz). <br> Vous pouvez modifier la quantité d'images pour chaque série dans le script "index.php", ligne 180, en modifiant la valeur de la variable $limit.
      ```bash
-     php index.php
+     docker compose exec api.services.geoquizz php index.php
      ```
      Ce script va insérer des données dans les collections "series" et "images" pour tester l'application
 4. Aller dans le dossier appGeoquizz/sql depuis le service docker et exécuter le script "create_databases.php" et ensuite le script "insert_data.php" pour créer la base de données du jeu avec les commandes suivantes :
      ```bash
-     php create_databases.php
-     php insert_data.php
+     docker compose exec api.services.geoquizz php sql/create_databases.php
+     docker compose exec api.services.geoquizz php sql/insert_data.php
      ```
      Ces scripts vont créer la base de données du jeu et insérer des données pour tester l'application
 
@@ -85,7 +85,7 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
       ```
     - Frontend :
       ```bash
-      docker-compose exec frontend npm install
+      docker compose exec frontend npm install
       ```
 
 6. Créer un fichier ".env" à la racine du dossier frontend et y mettre la variable d'environnement suivante :
@@ -94,6 +94,9 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
    ```
 7. Lancer l'application sur un navigateur à l'adresse http://localhost:4545
 
+8. Vous pouvez vous connecter avec les identifiants suivants :
+    - email : user1@example.com
+    - password : password1
 
 ## Front-end :
 - Composition API (VueJS 3) 

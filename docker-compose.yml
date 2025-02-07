@@ -120,7 +120,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-    command: php src/infrastructure/http/MailHttp.php
+    command: sh -c "composer install && php src/infrastructure/Http/MailHttp.php"
 
 
   # service gateway
