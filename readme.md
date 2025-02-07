@@ -47,7 +47,7 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
      - <b>id</b> (génération automatique uuid)
      - <b>nom</b> (input de type string)
      - <b>description</b> (input de type string)
-     ![img.png](img.png)<br><br>
+     ![img.png](images_readme/img.png)<br><br>
    - Créer une collection "images" avec les champs suivants :
      - <b>id</b> (génération automatique uuid)
      - <b>nom</b> (input de type string)
@@ -55,13 +55,13 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
      - <b>longitude</b> (input de type float)
      - <b>mapillary_id</b> (input de type string)
      - <b>serie</b> (relation avec la collection "series" : many to one)
-     ![img_1.png](img_1.png)<br><br>
+     ![img_1.png](images_readme/img_1.png)<br><br>
    - Donner toutes les autorisations à l'utilisateur "public" pour les collections "series" et "images" et "directus_files" (pour les images)
-   ![img_2.png](img_2.png)<br><br>
+   ![img_2.png](images_readme/img_2.png)<br><br>
    - Générer un token d'accès pour l'utilisateur "admin" et le copier pour le mettre dans 'geoguizz.env'. Ne pas oublier de sauvegarder les 3 étapes sur directus.
-   ![img_4.png](img_4.png)<br><br>
-   ![img_5.png](img_5.png)<br><br>
-   ![img_6.png](img_6.png)<br><br>
+   ![img_4.png](images_readme/img_4.png)<br><br>
+   ![img_5.png](images_readme/img_5.png)<br><br>
+   ![img_6.png](images_readme/img_6.png)<br><br>
    - Lancer le script php avec la commande suivante (dans le service docker api.services.geoquizz). <br> Vous pouvez modifier la quantité d'images pour chaque série dans le script "index.php", ligne 180, en modifiant la valeur de la variable $limit.
      ```bash
      php index.php
