@@ -14,7 +14,7 @@ class Cors
     {
         $rs = $next->handle($rq);
         return $rs
-            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Origin', 'http://localhost:4545')
             ->withHeader('Access-Control-Allow-Methods', 'POST, PUT, GET, PATCH' )
             ->withHeader('Access-Control-Allow-Headers','Authorization, Content-Type')
             ->withHeader('Access-Control-Max-Age', '3600')

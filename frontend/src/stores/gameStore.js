@@ -46,22 +46,11 @@ export const useGameStore = defineStore('game', {
       this.score = 0;
       this.scores = [];
       this.totalScore = 0;
-      this.timeLeft = 30;
+      this.timeLeft = 0;
       this.timerStarted = false;
       this.imagesPlayed = [];
-      this.imagesLeft = 10;
+      this.imagesLeft = 0;
       this.hasPlayed = false;
     }
   },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        storage: localStorage, // Utilisez sessionStorage si nécessaire
-        paths: [
-          'totalScore'
-        ],
-      }
-    ]
-  }
 });
