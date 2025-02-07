@@ -22,45 +22,53 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
 
 export function calculateScore(distance, timeLeft, maxDistance) {
   const store = useGameStore();
+
   if (distance <= 0 || timeLeft <= 0 || maxDistance <= 0) return 0;
 
-  const MAX_SCORE = 5000;
-  const TIME_FACTOR = 1;
+  const MAX_SCORE = 5000; // Score maximum possible
+  const TIME_FACTOR = 1; // Facteur d'importance du temps
 
+  // Calcul du score basé sur la distance (plus elle est petite, plus le score est élevé)
   let distanceScore = Math.max(0, 1 - distance / maxDistance);
+
+  // Facteur de temps (plus le temps restant est élevé, plus le score est boosté)
   let timeBonus = 1 + (timeLeft / 100) * TIME_FACTOR;
 
+  // Score final arrondi
   let score = Math.round(MAX_SCORE * distanceScore * timeBonus);
+
   store.score = score;
+
   store.scores.push(score);
+
+  //On reset également quelques valeurs du store :
+  store.timeLeft = store.time;
+
+  store.gameState = "game_recap";
 
   return score;
 }
-
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
-
-  if(gameStore.gameState === 'game_over') return;
-
+  if (gameStore.gameState === 'game_over') return;
   if (gameStore.timerStarted) return;
-
   if (gameStore.timeLeft <= 0) return;
 
   const timer = setInterval(() => {
     gameStore.timerStarted = true;
 
-    if (gameStore.timeLeft > 0) {
+    if (gameStore.timeLeft > 0 && gameStore.gameState === 'playing') {
       gameStore.timeLeft--;
     }
+    else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
-        router.push({name: 'gamerecap'});
+      router.push({ name: 'gamerecap' });
     }
-  , 1000);
+  }, 1000);
 }
-
 
 export function refreshMapOnResize(map) {
   const mapElement = document.getElementById('game_map');
@@ -80,6 +88,13 @@ export function calculateTotalScore() {
 
 export function callRandomThemeImage() {
   const gameStore = useGameStore();
+
+  //On reset quelques valeurs du store :
+  gameStore.currentLat = null;
+  gameStore.currentLon = null;
+  gameStore.distance = null;
+  gameStore.distanceKm = null;
+  gameStore.hasPlayed = false;
 
   if (gameStore.images.length === 0) return null; // Vérification si le tableau est vide
 
@@ -103,12 +118,14 @@ export function displayImage(img_src) {
     gameStore.gameState = 'game_over';
     gameStore.timerStarted = false;
     router.push({name: 'gameover'});
+    return;
   }
 
   if (image) {
     image.src = `http://localhost:6081` + img_src;
     gameStore.imagesLeft--;
-  } else {
+  }
+  else {
     //On envoi un toast avec une erreur
   }
 }
@@ -119,14 +136,6 @@ export function displayImage(img_src) {
 ///////////////////////////////////
 
 //Créer une partie :
-
-
-export function initGame(time, distance, nb_photos) {
-  const gameStore = useGameStore();
-  gameStore.distance = distance;
-  gameStore.timeLeft = time;
-  gameStore.nb_photos = nb_photos;
-}
 
 export function createParty(name, token, theme, nb_photos, time, user_id) {
   const api = useAPI();
@@ -224,6 +233,16 @@ export async function callSerieImages() {
   try {
     const response = await fetch('http://localhost:5000/api/series/images');
     return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getThemes() {
+  try {
+    const api = useAPI();
+    const response = await api.get('/items/series');
+    return await response.data;
   } catch (error) {
     console.error(error);
   }
