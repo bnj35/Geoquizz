@@ -27,7 +27,7 @@ getParties().then((data) => {
     <div id="main" class="w-full m-8 mb-16">
       <h1 class="text-gray-800 text-6xl">Bienvenue sur GeoQuizz</h1>
       <p class = "text-gray-800 text-2xl">Trouvez où vous êtes le plus vite possible !!!</p>
-      <router-link to="/game"><button class="bg-gray-700 py-4 px-10 mt-8 rounded-[1.25rem] text-amber-50 hover:text-amber-100 hover:bg-gray-800 transition-all cursor-pointer">Jouer</button></router-link>
+      <router-link to="/createpartie"><button class="bg-gray-700 py-4 px-10 mt-8 rounded-[1.25rem] text-amber-50 hover:text-amber-100 hover:bg-gray-800 transition-all cursor-pointer">Jouer</button></router-link>
     </div>
 
     <div class="m-8 mt-5">
