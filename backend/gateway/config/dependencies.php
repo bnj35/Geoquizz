@@ -1,5 +1,6 @@
 <?php
 
+use geoquizz\application\actions\GatewayDirectusAction;
 use Psr\Container\ContainerInterface;
 use geoquizz\application\actions\GatewayAuthAction;
 use geoquizz\application\middlewares\Auth;
@@ -9,7 +10,7 @@ use geoquizz\application\actions\GatewayAssetsAction;
 
 return [
 
-    //log 
+    //log
     'log.prog.level' => \Monolog\Level::Debug,
     'log.prog.name' => 'geoquizz.program.log',
     'log.prog.file' => __DIR__ . '/log/geoquizz.program.error.log',
@@ -56,5 +57,8 @@ return [
     GatewayAssetsAction::class => function (ContainerInterface $c) {
         return new GatewayAssetsAction($c->get('directus.client'));
     },
+    GatewayDirectusAction::class => function (ContainerInterface $c) {
+        return new GatewayDirectusAction($c->get('directus.client'));
+    }
 
 ];
