@@ -88,7 +88,11 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
       docker-compose exec frontend npm install
       ```
 
-6. Lancer l'application sur un navigateur à l'adresse http://localhost:4545
+6. Créer un fichier ".env" à la racine du dossier frontend et y mettre la variable d'environnement suivante :
+    ```env
+    VITE_API_BASE_URL=http://localhost:6081
+   ```
+7. Lancer l'application sur un navigateur à l'adresse http://localhost:4545
 
 
 ## Front-end :
