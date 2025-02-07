@@ -10,7 +10,6 @@ export const useUserStore = defineStore('user', {
     'nb_parties': 0,
     'meilleur_coup': 0,
     'pire_coup': 0,
-
-
   }),
 });
+
