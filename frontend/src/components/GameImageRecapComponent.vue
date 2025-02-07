@@ -82,11 +82,11 @@ onMounted(() => {
     <div v-if="gameStore.hasPlayed" class="h-screen basis-1/3 flex flex-col items-center justify-center gap-2" id="game_image_recap">
       <p class="text-4xl font-bold">Vous avez marqué : {{ gameStore.score }} points.</p>
       <p class="text-3xl font-light">Distance : {{ gameStore.distance }}m ({{gameStore.distanceKm}}km)</p>
-      <RouterLink to="/game" class="bg-green-400 w-fit px-4 py-2 rounded-3xl">Passer à l'image suivante</RouterLink>
+      <RouterLink to="/game" class="bg-gray-800 text-amber-50 w-fit px-4 py-2 rounded-3xl">Passer à l'image suivante</RouterLink>
     </div>
     <div v-else class="h-screen basis-1/3 flex flex-col items-center justify-center gap-4">
       <p class="text-4xl font-bold">Vous n'avez pas joué.</p>
-      <RouterLink to="/game" class="bg-green-400 w-fit px-4 py-2 rounded-3xl">Passer à l'image suivante</RouterLink>
+      <RouterLink to="/game" class="bg-gray-800 text-amber-50 -fit px-4 py-2 rounded-3xl">Passer à l'image suivante</RouterLink>
     </div>
   </div>
 </template>

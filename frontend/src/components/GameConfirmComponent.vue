@@ -13,7 +13,7 @@ const isClickable = computed(() => {
 
 <template>
   <div
-    class="absolute bg-green-400 px-8 rounded-2xl py-2 left-1/2 bottom-8 -translate-x-1/2 cursor-pointer transition-opacity duration-300"
+    class="absolute bg-gray-800 text-amber-50 px-16 text-2xl rounded-3xl py-4 left-1/2 bottom-8 -translate-x-1/2 cursor-pointer transition-opacity duration-300"
     id="ConfirmButton"
     :class="{ 'opacity-20': !isClickable }">
 

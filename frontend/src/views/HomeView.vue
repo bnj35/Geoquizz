@@ -6,7 +6,7 @@ import ToastComponent from "@/components/ToastComponent.vue";
 </script>
 
 <template>
-  <div class="bg-red-400 h-screen">
+  <div class="bg-amber-50 h-screen">
     <Navbar />
     <HeroSection/>
     <ToastComponent message="eeegfplmgfkmoogfkmogkfgfoghkmoee"/>

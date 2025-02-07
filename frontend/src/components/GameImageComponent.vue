@@ -1,32 +1,24 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { callRandomThemeImage, displayImage } from "@/utils/game/GameSystem.js";
-import { useRouter } from 'vue-router';
+import {onMounted, ref} from "vue";
+import {callRandomThemeImage, displayImage} from "@/utils/game/GameSystem.js";
 
-const router = useRouter();
+const loader = ref(true);
 
-router.beforeEach((to, from, next) => {
-  if (to.name === 'game_image') {
-    const image = callRandomThemeImage();
-    if (image) {
-      displayImage(image);
-      next();
-    } else {
-      next(false); // Cancel navigation if no image is found
-    }
-  } else {
-    next();
-  }
+onMounted(() => {
+  displayImage(callRandomThemeImage(), loader => {
+    loader.value = false;
+  });
 });
 
 </script>
 
 <template>
-  <div class="absolute bg-red-400" id="game_image">
+  <div class="absolute bg-amber-50 " id="game_image">
     <img class="h-screen w-screen object-cover" :src="srcGameImage" alt="Game Image" />
+    <div v-if="loader.value" id="loader" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+    </div>
   </div>
+
 </template>
 
-<style scoped>
-
-</style>

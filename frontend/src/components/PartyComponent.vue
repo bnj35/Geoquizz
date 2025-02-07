@@ -20,16 +20,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="bg-green-300 flex justify-center items-center w-1/3 px-4 py-4" id="party_card">
-    <div class="basis-2/3 bg-orange-300 text-center" id="party_details">
-      <h3>Nom : {{ name }}</h3>
-      <p>Theme joué : {{ theme }}</p>
-      <p>Score: {{ score }}</p>
-      <p>Nombre de photos : {{ nb_photos }}</p>
-    </div>
-    <div class="basis-1/3 bg-red-300 text-center" id="party_join">
-      <p>Jouer à la série</p>
-    </div>
-
-  </div>
+    <td class="p-2 border border-gray-300">{{ name }}</td>
+    <td class="p-2 border border-gray-300">{{ theme }}</td>
+    <td class="p-2 border border-gray-300">{{ score }}</td>
+    <td class="p-2 border border-gray-300">{{ nb_photos }}</td>
+    <td class="p-2 text-center border border-gray-300 ">
+      <button class="w-full text-center p-2  cursor-pointer hover:text-amber-100 transition-all rounded-2xl" id="party_join">
+        Jouer à la série
+      </button>
+    </td>
 </template>

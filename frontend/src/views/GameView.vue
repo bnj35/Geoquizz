@@ -22,7 +22,3 @@
     <GameMapComponent/>
     <GameConfirmComponent/>
 </template>
-
-<style scoped>
-
-</style>
