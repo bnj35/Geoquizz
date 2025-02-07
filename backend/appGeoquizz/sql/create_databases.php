@@ -10,7 +10,6 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    $pdo->exec("CREATE DATABASE geoquizz;");
     $pdo->exec("CREATE DATABASE geoquizz_auth;");
 
     echo "Bases de données créées avec succès !\n";
