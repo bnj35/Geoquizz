@@ -119,23 +119,7 @@ export function displayImage(img_src) {
 ///////////////////////////////////
 
 //Créer une partie :
-export function createParty(name, token, theme, nb_photos, time, user_id) {
-  const api = useAPI();
 
-  return api.post('/parties', {
-    nom: name,
-    token: token,
-    nb_photos: nb_photos,
-    score: 0,
-    theme: theme,
-    temps: time,
-    user_id: user_id,
-  })
-=======
-  if (image) {
-    image.src = img_src;
-  }
-}
 
 export function initGame(time, distance, nb_photos) {
   const gameStore = useGameStore();
@@ -189,6 +173,7 @@ export function updateUserStats(user_stats_id) {
 //Appeler les images d'une série :
   async function callThemeImages() {
     const gameStore = useGameStore();
+  }
 
 
 
