@@ -22,7 +22,7 @@ return function(\Slim\App $app):\Slim\App {
 
     $app->get('/stats[/]', DisplayStatsAction::class);
     $app->get('/stats/{id}[/]', DisplayStatAction::class);
-    $app->post('/stats[/]', CreateStatAction::class);
+    $app->patch('/stats[/]', CreateStatAction::class);
     $app->put('/stats/{id}[/]', UpdateStatAction::class);
 
     $app->get('/parties/{id}', GetPartieByIdAction::class)->setName('getPartieById');

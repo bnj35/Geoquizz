@@ -28,11 +28,6 @@
     <div class=" bg-gray-50 border-b-1 hidden md:flex items-center justify-between py-4" id="desktop_navbar">
       <div class="text-center basis-2/10"><router-link to="/">Accueil</router-link></div>
 
-      <div class="flex justify-around basis-4/10" id="nav-links">
-        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
-
-      </div>
-
       <div class="basis-2/10 gap-4 profile flex justify-center items-center">
         <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
         <p v-if="isLoggedIn" @click="logout">Logout</p>

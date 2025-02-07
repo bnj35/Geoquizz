@@ -15,7 +15,6 @@ onMounted(() => {
   if (userStore.user_token) {
     getPartiesByUserId(userStore.user_id).then((data) => {
       userParties.value = data.parties;
-      console.log(userParties.value);
     });
   }
 });

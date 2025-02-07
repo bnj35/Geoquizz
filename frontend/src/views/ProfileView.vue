@@ -8,7 +8,5 @@ import StastComponent from '@/components/StastComponent.vue';
     <div class="flex justify-center items-center h-screen">
         <StastComponent />
     </div>
-
-
 </template>
 
