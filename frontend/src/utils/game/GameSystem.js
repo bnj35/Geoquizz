@@ -20,22 +20,18 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
   return Math.round(R * c);
 }
 
-export function calculateScore(distance, timeLeft, maxDistance) {
+export function calculateScore(distance, maxDistance) {
   const store = useGameStore();
 
-  if (distance <= 0 || timeLeft <= 0 || maxDistance <= 0) return 0;
+  if (distance <= 0 || maxDistance <= 0) return 0;
 
   const MAX_SCORE = 5000; // Score maximum possible
-  const TIME_FACTOR = 1; // Facteur d'importance du temps
 
   // Calcul du score basé sur la distance (plus elle est petite, plus le score est élevé)
   let distanceScore = Math.max(0, 1 - distance / maxDistance);
 
-  // Facteur de temps (plus le temps restant est élevé, plus le score est boosté)
-  let timeBonus = 1 + (timeLeft / 100) * TIME_FACTOR;
-
   // Score final arrondi
-  let score = Math.round(MAX_SCORE * distanceScore * timeBonus);
+  let score = Math.round(MAX_SCORE * distanceScore);
 
   store.score = score;
 
@@ -61,11 +57,14 @@ export function calculateTimeLeft() {
     if (gameStore.timeLeft > 0 && gameStore.gameState === 'playing') {
       gameStore.timeLeft--;
     }
-    else {
+    else if (gameStore.timeLeft === 0) {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
       router.push({ name: 'gamerecap' });
+    }
+    else{
+      throw new Error('Error calculating time left');
     }
   }, 1000);
 }
