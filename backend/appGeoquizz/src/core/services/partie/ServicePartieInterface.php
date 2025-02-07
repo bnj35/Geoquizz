@@ -18,7 +18,7 @@ interface ServicePartieInterface
     public function getEmailByPartieId(string $id):string;
     public function setPartieImage(array $images, string $partie_id):array;
     public function getUserIdByPartieId(string $id): string;
-    public function getToken(): string;
+    public function getToken($payload): string;
 
 
 }
