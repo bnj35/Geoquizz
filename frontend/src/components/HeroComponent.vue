@@ -11,13 +11,10 @@ const userStore = useUserStore();
 let userParties = ref([]);
 onMounted(() => {
   const userStore = useUserStore();
-  console.log(userStore);
-  console.log(userStore.user_token);
 
   if (userStore.user_token) {
     getPartiesByUserId(userStore.user_id).then((data) => {
       userParties.value = data.parties;
-      console.log(userParties.value);
     });
   }
 });

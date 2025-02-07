@@ -29,7 +29,6 @@
       <div class="text-center basis-2/10"><router-link to="/">Home</router-link></div>
 
       <div class="flex justify-around basis-4/10" id="nav-links">
-        <router-link v-if="isLoggedIn" to="/game">Game</router-link>
         
       </div>
 

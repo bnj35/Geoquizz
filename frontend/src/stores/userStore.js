@@ -20,6 +20,10 @@ export const useUserStore = defineStore('user', {
       setTimeout(() => {
         this.toast_error = false;
       }, 3000); // Hide the toast after 3 seconds
+
     }
-  }
+  },
+  persist: {
+    enabled: true,
+  },
 });

@@ -18,6 +18,6 @@ onMounted(() => {
   <div class="bg-gray-50 h-screen">
     <Navbar />
     <HeroSection/>
-    <ToastComponent message="eeegfplmgfkmoogfkmogkfgfoghkmoee"/>
+    <!-- <ToastComponent message="eeegfplmgfkmoogfkmogkfgfoghkmoee"/> -->
   </div>
 </template>

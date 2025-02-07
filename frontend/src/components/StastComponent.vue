@@ -33,7 +33,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center items-center h-screen mb-2 shadow-2xl">
         <h1 class=" text-7xl mb-10">Bienvenue {{ username }}</h1>
     <div id="user_stats" class="p-6 bg-gray-100 rounded-lg shadow-md">
-        <h2 class="text-lg font-bold mb-4">Statistiques de : {{ userStore.user_id }}</h2>
+        <h2 class="text-lg font-bold mb-4">Statistiques pour toi {{ username }}</h2>
         <p class="text-2xl mb-2">Score total : {{ userStore.score_total }}</p>
         <p class="text-2xl mb-2">Score moyen : {{ userStore.score_moyen }}</p>
         <p class="text-2xl mb-2">Nombre de parties : {{ userStore.nb_parties }}</p>
