@@ -21,5 +21,6 @@ export const useUserStore = defineStore('user', {
         this.toast_error = false;
       }, 3000); // Hide the toast after 3 seconds
     }
-  }
+  },
+  persist: true,
 });

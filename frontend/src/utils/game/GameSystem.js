@@ -23,27 +23,28 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
 export function calculateScore(distance, maxDistance) {
   const store = useGameStore();
 
-  if (distance <= 0 || maxDistance <= 0) return 0;
+  console.log("Distance:", distance, "MaxDistance:", maxDistance);
 
-  const MAX_SCORE = 5000; // Score maximum possible
+  if (distance <= 0 || maxDistance <= 0) {
+    console.log("Distance ou maxDistance invalide -> Score: 0");
+    return 0;
+  }
 
-  // Calcul du score basé sur la distance (plus elle est petite, plus le score est élevé)
+  const MAX_SCORE = 5000;
   let distanceScore = Math.max(0, 1 - distance / maxDistance);
+  console.log("Distance Score:", distanceScore);
 
-  // Score final arrondi
   let score = Math.round(MAX_SCORE * distanceScore);
+  console.log("Score calculé:", score);
 
   store.score = score;
-
   store.scores.push(score);
-
-  //On reset également quelques valeurs du store :
   store.timeLeft = store.time;
-
   store.gameState = "game_recap";
 
   return score;
 }
+
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
@@ -212,7 +213,8 @@ export async function signIn(email, password) {
     userStore.user_id = response.data.id;
     return response.data;
   } catch (error) {
-    console.error(error);
+
+    userStore.showToast('Erreur de connexion');
   }
 }
 

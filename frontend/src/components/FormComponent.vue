@@ -25,7 +25,7 @@ const props = defineProps({
   },
   paragraphe: {
     type: String,
-    default: 'Sign Up'
+    default: "S'inscrire"
   }
 });
 
@@ -47,10 +47,10 @@ const handleSubmit = async (event) => {
   <div class="flex flex-col items-center justify-center bg-gray-100 p-8 rounded-lg shadow-lg text-center">
     <h1 class="text-gray-800 mb-5 text-2xl font-semibold">{{ title }}</h1>
     <form @submit="handleSubmit" class="flex flex-col w-full">
-      <label for="email" class="text-gray-400 text-md text-left mb-1">Email address</label>
+      <label for="email" class="text-gray-400 text-md text-left mb-1">Adresse email :</label>
       <input type="email" id="email" name="email" :placeholder="emailPlaceholder" required class="bg-gray-200 border border-gray-300 p-3 rounded mb-4 text-gray-800 w-full focus:outline-none focus:ring-2 focus:ring-gray-500" />
 
-      <label for="password" class="text-gray-400 text-md text-left mb-1">Password</label>
+      <label for="password" class="text-gray-400 text-md text-left mb-1">Mot de passe :</label>
       <input type="password" id="password" name="password" :placeholder="passwordPlaceholder" required class="bg-gray-200 border border-gray-300 p-3 rounded mb-4 text-gray-800 w-full focus:outline-none focus:ring-2 focus:ring-gray-500" />
 
       <button type="submit" class="bg-gray-800 border-none p-3 text-white text-lg rounded cursor-pointer hover:bg-gray-700">{{ buttonText }}</button>
