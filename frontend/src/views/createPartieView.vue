@@ -22,7 +22,6 @@ const themesPartie = async () => {
   try {
     const response = await getThemes();
     if (response) {
-      console.log(response)
       themes.value = response.data;
     }
   } catch (error) {
@@ -34,7 +33,6 @@ const handleSubmit = async () => {
   try {
     const response = await createParty(name.value, theme.value, nb_photos.value, time.value, userStore.user_id);
     if (response) {
-      console.log(response)
 
       gameStore.gameState = 'playing';
       gameStore.maxDistance = response.partie.distance;

@@ -9,7 +9,7 @@ import {onMounted} from "vue";
 const userStore = useUserStore();
 
 onMounted(() => {
-  userStore.showToast("le message d'erreur estle message d'erreur est le suivant : eele message d'erreur est le suivant : eele message d'erreur est le suivant : eele message d'erreur est le suivant : eele message d'erreur est le suivant : ee le suivant : eee")
+  userStore.showToast("message erreur test")
 });
 
 </script>
@@ -18,6 +18,5 @@ onMounted(() => {
   <div class="bg-gray-50 h-screen">
     <Navbar />
     <HeroSection/>
-    <!-- <ToastComponent message="eeegfplmgfkmoogfkmogkfgfoghkmoee"/> -->
   </div>
 </template>

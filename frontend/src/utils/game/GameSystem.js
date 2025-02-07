@@ -22,28 +22,40 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
 
 export function calculateScore(distance, maxDistance) {
   const store = useGameStore();
+  const api = useAPI();
+  const userStore = useUserStore();
 
-  if (distance <= 0 || maxDistance <= 0) return 0;
+  if (distance <= 0 || maxDistance <= 0) {
+    return 0;
+  }
 
-  const MAX_SCORE = 5000; // Score maximum possible
-
-  // Calcul du score basé sur la distance (plus elle est petite, plus le score est élevé)
+  const MAX_SCORE = 5000;
   let distanceScore = Math.max(0, 1 - distance / maxDistance);
 
-  // Score final arrondi
   let score = Math.round(MAX_SCORE * distanceScore);
 
   store.score = score;
-
   store.scores.push(score);
-
-  //On reset également quelques valeurs du store :
   store.timeLeft = store.time;
-
   store.gameState = "game_recap";
+
+
+  if (userStore.meilleur_coup < score) {
+    userStore.meilleur_coup = score;
+  }
+
+  if (userStore.pire_coup > score || userStore.pire_coup === 0) {
+    userStore.pire_coup = score;
+  }
+
+  api.patch(`/parties/${store.gameId}/score`, { score: score }, { headers: { 'Authorization': `Bearer ${userStore.user_token}` } })
+  
+  store.totalScore = score;
 
   return score;
 }
+
+
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
@@ -63,9 +75,6 @@ export function calculateTimeLeft() {
       gameStore.timerStarted = false;
       router.push({ name: 'gamerecap' });
     }
-    else{
-      throw new Error('Error calculating time left');
-    }
   }, 1000);
 }
 
@@ -82,7 +91,9 @@ export function refreshMapOnResize(map) {
 
 export function calculateTotalScore() {
   const store = useGameStore();
-  store.totalScore += store.scores.reduce((acc, score) => acc + score, 0);
+  store.totalScore += store.score;
+
+  return store.totalScore;
 }
 
 export function callRandomThemeImage() {
@@ -110,12 +121,15 @@ export function callRandomThemeImage() {
 
 export function displayImage(img_src) {
   const gameStore = useGameStore();
+  const userStore = useUserStore();
   const image = document.querySelector('#game_image img');
 
   //On vérifie si il y a gameover :
   if(gameStore.imagesLeft === 0){
     gameStore.gameState = 'game_over';
     gameStore.timerStarted = false;
+    userStore.score_total = userStore.score_total + gameStore.totalScore;
+    userStore.score_moyen = userStore.score_total / userStore.nb_parties;
     router.push({name: 'gameover'});
     return;
   }
@@ -129,7 +143,6 @@ export function displayImage(img_src) {
   }
 }
 
-
 ///////////////////////////////////
 //Logique de jeu call via API :
 ///////////////////////////////////
@@ -139,6 +152,9 @@ export function displayImage(img_src) {
 export function createParty(name, theme, nb_photos, time, user_id) {
 
   const userStore = useUserStore();
+
+  userStore.nb_parties++; 
+
   const api = useAPI();
   return api.post('/parties',
     { nom: name, nb_photos: nb_photos, score: 0, theme: theme, temps: time, user_id: user_id },
@@ -183,18 +199,33 @@ export function getUserStats(id) {
 
 export function updateUserStats(user_stats_id) {
   const api = useAPI();
-  return api.put(`/stats/${user_stats_id}`, {
-    score_total: 0, score_moyen: 0, nb_parties: 0, meilleur_coup: 0, pire_coup: 0
+  const userStore = useUserStore();
+  let statsId = '';
+
+  const score_total = userStore.score_total;
+  const score_moyen = userStore.score_moyen;
+  const nb_parties = userStore.nb_parties;
+  const meilleur_coup = userStore.meilleur_coup;
+  const pire_coup = userStore.pire_coup;
+
+  api.get(`/users/${user_stats_id}/stats`, {
+    headers: { 'Authorization': `Bearer ${userStore.user_token}` }
+  }
+).then(response => {
+  console.log(response.data);
+  statsId = response.data.stats.id;
+  api.put(`/stats/${statsId}`, {
+   user_id:user_stats_id, score_total: score_total, score_moyen: score_moyen, nb_parties: nb_parties, meilleur_score: meilleur_coup, pire_coups: pire_coup
   })
     .then(response => response.data)
-    .catch(error => { console.error('Error updating user stats:', error); throw error; });
+    .catch(error => { console.error('Error updating user stats:', error); throw error; })
 }
+  )
+
+.catch(error => { console.error('Error updating user stats:', error); throw error; });
 
 
-//Appeler les images d'une série :
-  async function callThemeImages() {
-    const gameStore = useGameStore();
-  }
+}
 
 
 
@@ -222,13 +253,16 @@ export async function signUp(email, password) {
     const userStore = useUserStore();
     const response = await api.post('/signup', {}, {
       headers: { 'Authorization': `Basic ${btoa(`${email}:${password}`)}` }
-    });
-    if(response.data){
-      router.push({name: 'home'});
+    }).then (response =>
+    {
+      return response;
+    }
+    );
+    if(response){
+      router.push({name: 'signin'});
     }
     userStore.user_token = response.data.token;
     userStore.user_id = response.data.id;
-    return response.data;
   } catch (error) {
     console.error(error);
   }

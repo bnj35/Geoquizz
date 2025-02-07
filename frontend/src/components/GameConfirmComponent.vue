@@ -19,7 +19,7 @@ const isClickable = computed(() => {
 
     <router-link
       v-if="isClickable"
-      @click="calculateScore(gameStore.distance, gameStore.timeLeft, gameStore.maxDistance)"
+      @click="calculateScore(gameStore.distance, gameStore.maxDistance)"
       to="/gamerecap"
     >
       <p>Confirmer</p>
