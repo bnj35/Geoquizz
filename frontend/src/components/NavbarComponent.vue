@@ -11,13 +11,12 @@
 
       <div class="flex justify-around basis-4/10" id="nav-links">
         <router-link to="/game">Game</router-link>
-        <router-link to="/profile">Profile</router-link>
         <router-link to="/signup">Signup</router-link>
         <router-link to="/signin">Signin</router-link>
       </div>
 
       <div class= "basis-2/10 gap-4 profile flex justify-center items-center">
-        <span class="">{{ username }}</span>
+        <router-link to="/profile">Profile</router-link>
       </div>
     </div>
 
