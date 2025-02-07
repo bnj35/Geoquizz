@@ -13,7 +13,7 @@
     <h1 class="text-gray-800 text-6xl">Partie terminée</h1>
     <p class="text-gray-800 text-4xl">Score : {{ gameStore.totalScore }}</p>
     <p class="text-gray-800 text-2xl">Serie jouée : {{ gameStore.themePlayed }}</p>
-    <router-link to="/"><button class="bg-gray-700 py-4 px-10 mt-8 rounded-[1.25rem] text-amber-50 hover:text-amber-100 hover:bg-gray-800 transition-all cursor-pointer">Retour à l'accueil</button></router-link>
+    <router-link to="/"><button class="bg-gray-700 py-4 px-10 mt-8 rounded-[1.25rem] text-gray-50 hover:text-gray-100 hover:bg-gray-800 transition-all cursor-pointer">Retour à l'accueil</button></router-link>
   </div>
 </template>
 

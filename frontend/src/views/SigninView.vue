@@ -6,7 +6,7 @@ import Navbar from "@/components/NavbarComponent.vue";
 
 <template>
   <Navbar />
-  <div>
+  <div class="flex justify-center items-center h-screen">
     <FormComponent
       title="Sign In"
       emailPlaceholder="Enter your email"
@@ -18,11 +18,3 @@ import Navbar from "@/components/NavbarComponent.vue";
   </div>
 </template>
 
-<style scoped>
-div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-</style>
