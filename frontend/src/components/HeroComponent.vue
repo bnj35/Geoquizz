@@ -14,10 +14,12 @@ onMounted(() => {
   console.log(userStore);
   console.log(userStore.user_token);
 
-  getPartiesByUserId(userStore.user_id).then((data) => {
-    userParties.value = data.parties;
-    console.log(userParties.value);
-  });
+  if (userStore.user_token) {
+    getPartiesByUserId(userStore.user_id).then((data) => {
+      userParties.value = data.parties;
+      console.log(userParties.value);
+    });
+  }
 });
 
 // Liste des parties jouées par la communauté :
