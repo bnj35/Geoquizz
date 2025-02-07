@@ -122,7 +122,7 @@ export function displayImage(img_src) {
   }
 
   if (image) {
-    image.src = `http://localhost:6081` + img_src;
+    image.src = import.meta.env.VITE_API_BASE_URL + img_src;
     gameStore.imagesLeft--;
   }
   else {
