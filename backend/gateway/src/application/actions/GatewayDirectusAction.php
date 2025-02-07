@@ -2,23 +2,21 @@
 
 namespace geoquizz\application\actions;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
-use Slim\Exception\HttpInternalServerErrorException;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpUnauthorizedException;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Exception\HttpBadRequestException;
-
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpForbiddenException;
+use Slim\Exception\HttpInternalServerErrorException;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpUnauthorizedException;
 
-use GuzzleHttp\Client;
-
-class GatewayAssetsAction extends GatewayAbstractAction
+class GatewayDirectusAction extends GatewayAbstractAction
 {
+
     private Client $client;
 
     public function __construct(Client $client)
@@ -41,10 +39,9 @@ class GatewayAssetsAction extends GatewayAbstractAction
         try {
             $response = $this->client->request($method, $path, $options);
             $rs->getBody()->write($response->getBody()->getContents());
-            return $rs->withHeader('Content-Type', 'image/jpeg')
-            ->withStatus($response->getStatusCode());
+            return $rs->withStatus($response->getStatusCode());
         } catch (ConnectException | ServerException $e) {
-            throw new HttpInternalServerErrorException($rq, $e->getMessage());
+            throw new HttpInternalServerErrorException($rq, " internal server error");
         } catch (ClientException $e) {
             match($e->getCode()) {
                 400 => throw new HttpBadRequestException($rq, " Bad request "),

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use geoquizz\application\actions\GatewayAuthAction;
+use geoquizz\application\actions\GatewayDirectusAction;
 use Slim\App;
 use geoquizz\application\actions\GatewayPlayerAction;
 use geoquizz\application\actions\GatewayAssetsAction;
@@ -43,6 +44,7 @@ return function(App $app):App {
     $app->get('/users/{id}/stats[/]', GatewayPlayerAction::class)->setName('getStatsByUser');
 
     $app->get('/assets/{id}',GatewayAssetsAction::class)->setName('getAssets');
+    $app->get('/items/series', GatewayDirectusAction::class)->setName('getSeries');
 
     return $app;
 };
