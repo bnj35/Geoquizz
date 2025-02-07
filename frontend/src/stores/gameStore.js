@@ -19,6 +19,7 @@ export const useGameStore = defineStore('game', {
     scores: [], // NE PAS PERSISTE
     totalScore: 0, // DOIT PERSISTE
 
+    time: 0,
     timeLeft: 0, //GAME INIT
     timerStarted: false, //GAME INIT
 

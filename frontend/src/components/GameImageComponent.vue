@@ -1,9 +1,22 @@
 <script setup>
-import {onMounted, ref} from "vue";
-import {callRandomThemeImage, displayImage} from "@/utils/game/GameSystem.js";
+import { onMounted, ref } from "vue";
+import { callRandomThemeImage, displayImage } from "@/utils/game/GameSystem.js";
+import { useRouter } from 'vue-router';
 
-onMounted(() => {
-  displayImage(callRandomThemeImage());
+const router = useRouter();
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'game_image') {
+    const image = callRandomThemeImage();
+    if (image) {
+      displayImage(image);
+      next();
+    } else {
+      next(false); // Cancel navigation if no image is found
+    }
+  } else {
+    next();
+  }
 });
 
 </script>

@@ -44,29 +44,34 @@ export function calculateScore(distance, timeLeft, maxDistance) {
 
   store.scores.push(score);
 
+  //On reset également quelques valeurs du store :
+  store.timeLeft = store.time;
+  store.currentLat = null;
+  store.currentLon = null;
+
+  store.gameState = "game_recap";
+
   return score;
 }
 
 export function calculateTimeLeft() {
   const gameStore = useGameStore();
 
-  if(gameStore.gameState === 'game_over') return;
-
+  if (gameStore.gameState === 'game_over') return;
   if (gameStore.timerStarted) return;
-
   if (gameStore.timeLeft <= 0) return;
 
   const timer = setInterval(() => {
     gameStore.timerStarted = true;
 
-    if (gameStore.timeLeft > 0) {
+    if (gameStore.timeLeft > 0 && gameStore.gameState === 'playing') {
       gameStore.timeLeft--;
     }
+    else {
       clearInterval(timer);
       gameStore.gameState = 'game_over';
       gameStore.timerStarted = false;
-
-        router.push({name: 'gamerecap'});
+      router.push({ name: 'gamerecap' });
     }
   }, 1000);
 }
@@ -122,12 +127,14 @@ export function displayImage(img_src) {
     gameStore.gameState = 'game_over';
     gameStore.timerStarted = false;
     router.push({name: 'gameover'});
+    return;
   }
 
   if (image) {
     image.src = `http://localhost:6081` + img_src;
     gameStore.imagesLeft--;
-  } else {
+  }
+  else {
     //On envoi un toast avec une erreur
   }
 }
