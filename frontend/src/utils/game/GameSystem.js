@@ -68,8 +68,9 @@ export function calculateTimeLeft() {
 
         router.push({name: 'gamerecap'});
     }
-  }, 1000);
+  , 1000);
 }
+
 
 export function refreshMapOnResize(map) {
   const mapElement = document.getElementById('game_map');
