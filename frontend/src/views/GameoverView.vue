@@ -1,8 +1,17 @@
 <script setup>
   import {useGameStore} from "@/stores/gameStore.js";
   import NavbarComponent from "@/components/NavbarComponent.vue";
+  import { updateUserStats } from "@/utils/game/GameSystem";
+  import { useUserStore } from "@/stores/userStore";
+  import { calculateTotalScore } from "@/utils/game/GameSystem";
 
   const gameStore = useGameStore();
+
+  const userStore = useUserStore();
+
+  updateUserStats(userStore.user_id);
+
+
 
   gameStore.timeLeft = -1;
 </script>

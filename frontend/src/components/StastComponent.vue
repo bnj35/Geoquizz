@@ -37,7 +37,7 @@ onMounted(() => {
         <p class="text-2xl mb-2">Score total : {{ userStore.score_total }}</p>
         <p class="text-2xl mb-2">Score moyen : {{ userStore.score_moyen }}</p>
         <p class="text-2xl mb-2">Nombre de parties : {{ userStore.nb_parties }}</p>
-        <p class="text-2xl mb-2">Meilleur score : {{ userStore.meilleur_coup }}</p>
+        <p class="text-2xl mb-2">Meilleur coup : {{ userStore.meilleur_coup }}</p>
         <p class="text-2xl">Pire score : {{ userStore.pire_coup }}</p>
     </div>
 </div>
