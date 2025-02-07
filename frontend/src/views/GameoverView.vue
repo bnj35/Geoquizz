@@ -3,6 +3,8 @@
   import NavbarComponent from "@/components/NavbarComponent.vue";
 
   const gameStore = useGameStore();
+
+  gameStore.timeLeft = -1;
 </script>
 
 <template>
