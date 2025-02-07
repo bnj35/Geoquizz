@@ -43,8 +43,6 @@ export function calculateScore(distance, timeLeft, maxDistance) {
 
   //On reset également quelques valeurs du store :
   store.timeLeft = store.time;
-  store.currentLat = null;
-  store.currentLon = null;
 
   store.gameState = "game_recap";
 
@@ -91,6 +89,13 @@ export function calculateTotalScore() {
 export function callRandomThemeImage() {
   const gameStore = useGameStore();
 
+  //On reset quelques valeurs du store :
+  gameStore.currentLat = null;
+  gameStore.currentLon = null;
+  gameStore.distance = null;
+  gameStore.distanceKm = null;
+  gameStore.hasPlayed = false;
+
   if (gameStore.images.length === 0) return null; // Vérification si le tableau est vide
 
   const randomIndex = Math.floor(Math.random() * gameStore.images.length);
@@ -131,14 +136,6 @@ export function displayImage(img_src) {
 ///////////////////////////////////
 
 //Créer une partie :
-
-
-export function initGame(time, distance, nb_photos) {
-  const gameStore = useGameStore();
-  gameStore.distance = distance;
-  gameStore.timeLeft = time;
-  gameStore.nb_photos = nb_photos;
-}
 
 export function createParty(name, token, theme, nb_photos, time, user_id) {
   const api = useAPI();

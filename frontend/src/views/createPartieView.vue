@@ -18,7 +18,7 @@ const time = ref();
 
 const themes = ref([]);
 
-const themesPartie = async () => { 
+const themesPartie = async () => {
   try {
     const response = await getThemes();
     if (response) {
@@ -32,7 +32,7 @@ const themesPartie = async () => {
 
 const handleSubmit = async () => {
   try {
-    const response = await createParty(name.value, 'nrgciiibhffdghghfgdgdffgdgfddgfgddfgggfhhgftghgfdgdfpipigfdgfddgfgfdthfgdgfdyghyjhgdgfgfdnfgdggtfgdgfdghrffgdgfdggdgflolioilyhj', theme.value, nb_photos.value, time.value, userStore.user_id);
+    const response = await createParty(name.value, 'nrgciiibhfgfdgfdgffgfdfdgfdgdgdfgfdgdgfdgfdghghfgdgdffgdgfddgfgddfgggfhhgftghgfdgdfpipigfdgfddgfgfdthfgdgfdyghyjhgdgfgfdnfgdggtfgdgfdghrffgdgfdggdgflolioilyhj', theme.value, nb_photos.value, time.value, userStore.user_id);
     if (response) {
       console.log(response)
 
