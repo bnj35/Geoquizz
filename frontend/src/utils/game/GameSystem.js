@@ -137,9 +137,14 @@ export function displayImage(img_src) {
 
 //Créer une partie :
 
-export function createParty(name, token, theme, nb_photos, time, user_id) {
+export function createParty(name, theme, nb_photos, time, user_id) {
+
+  const userStore = useUserStore();
   const api = useAPI();
-  return api.post('/parties', { nom: name, token, nb_photos, score: 10, theme, temps: time, user_id })
+  return api.post('/parties',
+    { nom: name, nb_photos: nb_photos, score: 0, theme: theme, temps: time, user_id: user_id },
+    { headers: { 'Authorization': `Bearer ${userStore.user_token}` } }
+  )
     .then(response => response.data)
     .catch(error => { console.error('Error creating party:', error); throw error; });
 }
@@ -149,22 +154,30 @@ export function createParty(name, token, theme, nb_photos, time, user_id) {
 //Parties :
 //OK
 export function getParties() {
+
+  const userStore = useUserStore();
   const api = useAPI();
-  return api.get('/parties')
+  return api.get('/parties',
+    { headers: { 'Authorization': `Bearer ${userStore.user_token}` }
+  })
     .then(response => response.data)
     .catch(error => { console.error('Error fetching parties:', error); throw error; });
 }
 
 export function getPartiesByUserId(id) {
   const api = useAPI();
-  return api.get(`/users/${id}/parties`)
+  return api.get(`/users/${id}/parties`,
+    { headers: { 'Authorization': `Bearer ${useUserStore().user_token}` }})
     .then(response => response.data)
     .catch(error => { console.error('Error fetching parties:', error); throw error; });
 }
 
 export function getUserStats(id) {
+
+  const userStore = useUserStore();
   const api = useAPI();
-  return api.get(`/users/${id}/stats`)
+  return api.get(`/users/${id}/stats`,
+    { headers: { 'Authorization': `Bearer ${userStore.user_token}` }})
     .then(response => response.data)
     .catch(error => { console.error('Error fetching user stats:', error); throw error; });
 }
@@ -193,6 +206,9 @@ export async function signIn(email, password) {
     const response = await api.post('/signin', {}, {
       headers: { 'Authorization': `Basic ${btoa(`${email}:${password}`)}` }
     });
+    if(response.data){
+      router.push({name: 'home'});
+    }
     userStore.user_token = response.data.token;
     userStore.user_id = response.data.id;
     return response.data;
@@ -208,6 +224,9 @@ export async function signUp(email, password) {
     const response = await api.post('/signup', {}, {
       headers: { 'Authorization': `Basic ${btoa(`${email}:${password}`)}` }
     });
+    if(response.data){
+      router.push({name: 'home'});
+    }
     userStore.user_token = response.data.token;
     userStore.user_id = response.data.id;
     return response.data;

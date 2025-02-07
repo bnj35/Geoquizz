@@ -1,23 +1,31 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { getParties, getPartiesByUserId } from "@/utils/game/GameSystem.js";
 import SerieComponent from "@/components/SerieComponent.vue";
 import PartyComponent from "@/components/PartyComponent.vue";
-import {useUserStore} from "@/stores/userStore.js";
+import { useUserStore } from "@/stores/userStore.js";
 
 const userStore = useUserStore();
 
-//Liste des parties joués par un utilisateur spécifique :
+// Liste des parties jouées par un utilisateur spécifique :
 let userParties = ref([]);
-getPartiesByUserId(userStore.user_id).then((data) => {
-  userParties.value = data.parties;
-  console.log(userParties.value);
+onMounted(() => {
+  const userStore = useUserStore();
+  console.log(userStore);
+  console.log(userStore.user_token);
+
+  getPartiesByUserId(userStore.user_id).then((data) => {
+    userParties.value = data.parties;
+    console.log(userParties.value);
+  });
 });
 
-//Liste des parties joués par la communauté :
+// Liste des parties jouées par la communauté :
 let parties = ref([]);
-getParties().then((data) => {
-  parties.value = data.parties;
+onMounted(() => {
+  getParties().then((data) => {
+    parties.value = data.parties;
+  });
 });
 </script>
 
@@ -30,7 +38,7 @@ getParties().then((data) => {
       <router-link to="/createpartie"><button class="bg-gray-700 py-4 px-10 mt-8 rounded-[1.25rem] text-amber-50 hover:text-amber-100 hover:bg-gray-800 transition-all cursor-pointer">Jouer</button></router-link>
     </div>
 
-    <div class="m-8 mt-5">
+    <div v-if="userStore.user_token" class="m-8 mt-5">
       <h2 class="text-3xl mt-8"> Vos dernières parties :</h2>
       <table class="table-auto w-full border-collapse border border-gray-300 mt-8">
         <thead class="bg-gray-800 text-amber-50">

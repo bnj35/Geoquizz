@@ -32,7 +32,7 @@ const themesPartie = async () => {
 
 const handleSubmit = async () => {
   try {
-    const response = await createParty(name.value, 'nrgciiibhfgfdgfdgffgfdfdgfdgdgdfgfdgdgfdgfdghghfgdgdffgdgfddgfgddfgggfhhgftghgfdgdfpipigfdgfddgfgfdthfgdgfdyghyjhgdgfgfdnfgdggtfgdgfdghrffgdgfdggdgflolioilyhj', theme.value, nb_photos.value, time.value, userStore.user_id);
+    const response = await createParty(name.value, theme.value, nb_photos.value, time.value, userStore.user_id);
     if (response) {
       console.log(response)
 
