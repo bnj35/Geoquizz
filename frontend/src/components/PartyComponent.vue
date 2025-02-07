@@ -23,5 +23,12 @@ defineProps({
     <td class="p-2 border border-gray-300">{{ name }}</td>
     <td class="p-2 border border-gray-300">{{ theme }}</td>
     <td class="p-2 border border-gray-300">{{ score }}</td>
-    <td class="p-2 border border-gray-300">{{ nb_photos }}</td>
+    <td class="p-2 border border-gray-300 ">{{ nb_photos }}</td>
 </template>
+
+<style>
+td {
+  word-break: break-word;
+  word-wrap: break-word;
+}
+</style>
