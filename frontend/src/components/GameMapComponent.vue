@@ -14,7 +14,7 @@ import {
 const gameStore = useGameStore()
 
 onMounted(() => {
-  const map = L.map('game_map').setView([48.690280483493176, 6.18667602539062], 13)
+  const map = L.map('game_map').setView([46.232192999999995, 2.209666999999996], 4)
   let currentMarker = null
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

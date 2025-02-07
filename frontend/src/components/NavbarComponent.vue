@@ -2,7 +2,7 @@
   import { ref } from 'vue'
   import {useUserStore} from "@/stores/userStore.js";
 
-  const userStore = useUserStore()  
+  const userStore = useUserStore()
 
   const username = ref('Utilisateur')
   const isLoggedIn = ref(false)
@@ -26,17 +26,13 @@
 
 <template>
     <div class=" bg-gray-50 border-b-1 hidden md:flex items-center justify-between py-4" id="desktop_navbar">
-      <div class="text-center basis-2/10"><router-link to="/">Home</router-link></div>
-
-      <div class="flex justify-around basis-4/10" id="nav-links">
-        
-      </div>
+      <div class="text-center basis-2/10"><router-link to="/">Accueil</router-link></div>
 
       <div class="basis-2/10 gap-4 profile flex justify-center items-center">
         <router-link v-if="isLoggedIn" to="/profile">Profile</router-link>
         <p v-if="isLoggedIn" @click="logout">Logout</p>
-        <router-link v-if="!isLoggedIn" to="/signup">Signup</router-link>
-        <router-link v-if="!isLoggedIn" to="/signin">Signin</router-link>
+        <router-link v-if="!isLoggedIn" to="/signup">S'inscrire</router-link>
+        <router-link v-if="!isLoggedIn" to="/signin">Se connecter</router-link>
       </div>
     </div>
 
@@ -47,5 +43,5 @@
       <router-link v-if="isLoggedIn" to="profile"><img class="w-6 h-6" src="../assets/svg/user-regular.svg" alt=""></router-link>
       <router-link v-if="!isLoggedIn" to="signin"><img class="w-6 h-6" src="../assets/svg/right-to-bracket-solid.svg" alt=""></router-link>
     </div>
-  </div>  
+  </div>
 </template>
