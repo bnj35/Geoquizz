@@ -69,8 +69,6 @@ try {
         INSERT INTO Partie_Users (partie_id, user_id)
         VALUES
             ('$partie1Id', '$user1Id'),
-            ('$partie1Id', '$user2Id'),
-            ('$partie2Id', '$user1Id'),
             ('$partie2Id', '$user2Id');
     ";
 
