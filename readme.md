@@ -6,6 +6,11 @@
 - Biechy Maxime
 - Khenfer Vadim
 
+## URL Docketu :
+```
+http:/docketu.iutnc.univ-lorraine.fr:36619
+```
+
 ## Fonctionnalités réalisées :
 Toutes les fonctionnalités prioritaires ont été réalisées. + Fonctionnalités supplémentaires :
 - Niveaux de difficulté en choisissant le nombre de photos à trouver et le temps imparti par image
