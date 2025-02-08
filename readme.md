@@ -6,9 +6,20 @@
 - Biechy Maxime
 - Khenfer Vadim
 
-## URL Docketu :
+## Docketu :
+- Url frontend docketu :
 ```
 http:/docketu.iutnc.univ-lorraine.fr:36619
+```
+
+- Url directus docketu
+```
+http:/docketu.iutnc.univ-lorraine.fr:36611
+```
+
+- Url api backend docketu
+```
+http:/docketu.iutnc.univ-lorraine.fr:36612
 ```
 
 ## Fonctionnalités réalisées :
