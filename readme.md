@@ -98,6 +98,24 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
     - email : user1@example.com
     - password : password1
 
+## Tableau de bord :
+
+| Fonctionnalités                                                                                | Statut | Fait par (Backend)           | Fait par (Frontend) |
+|------------------------------------------------------------------------------------------------|--------|------------------------------|---------------------|
+| Authentification                                                                               | fait   | Timothée                     | Maxime              |
+| Directus (image et série)                                                                      | fait   | Maxime                       | Vadim               |
+| Calcul de la distance                                                                          | fait   | /                            | Vadim               |
+| Gestion des parties                                                                            | fait   | Benjamin / Timothée (un peu) | Vadim               |
+| Gestion des scores                                                                             | fait   | Timothée (statistiques)      | Vadim               |
+| Scripts de créations des données (directus et classique)                                       | fait   | Maxime                       | /                   |
+| Gestion des niveaux de difficulté (le joueur à le droit de choisir le temps pour chaque image) | fait   | Benjamin                     | Vadim               |
+| Gestion des messages                                                                           | fait   | Benjamin                     | /                   |
+| Gestion des erreurs                                                                            | fait   | Timothée                     | Vadim               |
+| Plusieurs séries possible                                                                      | fait   | Maxime                       | Vadim               |
+| Profil utilisateur                                                                             | fait   | Timothée                     | Benjamin            |
+| Style                                                                                          | fait   | /                            | Benjamin            |
+
+
 ## Front-end :
 - Composition API (VueJS 3) 
 - Vue Router (SPA)
