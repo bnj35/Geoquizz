@@ -34,7 +34,7 @@ const handleSubmit = async (event) => {
   const email = event.target.email.value;
   const password = event.target.password.value;
 
-  if (props.title === 'Sign In') {
+  if (props.title === 'Se connecter') {
     await signIn(email, password);
   } else {
     await signUp(email, password);
