@@ -50,7 +50,7 @@ GeoQuizz est un projet de jeu de géolocalisation. Le but du jeu est de trouver 
      ![img.png](images_readme/img.png)<br><br>
    - Créer une collection "images" avec les champs suivants :
      - <b>id</b> (génération automatique uuid)
-     - <b>nom</b> (input de type string)
+     - <b>image</b> (input de type string)
      - <b>latitude</b> (input de type float)
      - <b>longitude</b> (input de type float)
      - <b>mapillary_id</b> (input de type string)
